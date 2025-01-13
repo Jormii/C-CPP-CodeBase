@@ -5,7 +5,8 @@
 
 #define PY_FUNCTION(FNAME) PyObject *FNAME(PyObject *self, PyObject *args)
 
-#define PY_MODULE(mname, doc, functions) {PyModuleDef_HEAD_INIT, #mname, #doc, -1, functions}
+#define PY_MODULE(mname, doc, functions)                                       \
+    {PyModuleDef_HEAD_INIT, #mname, #doc, -1, functions}
 
 /** Example
 
@@ -18,7 +19,7 @@ static PyMethodDef functions[] = {
     PY_DEF(sum, "Sums numbers in range [1, arg]."),
     PY_DEF_END};
 
-static PyModuleDef module = PY_MODULE("c_lib", "A lib that calculates the product of two numbers", functions);
+static PyModuleDef module = PY_MODULE("c_lib", "<Documentation>", functions);
 
 PyMODINIT_FUNC PyInit_c_lib() {
     return PyModule_Create(&module);
