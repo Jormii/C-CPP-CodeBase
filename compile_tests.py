@@ -1,0 +1,145 @@
+import os
+import re
+from typing import Dict, List
+
+DIR = "./tests"
+
+# About C/C++ testing:
+#   - The programs looks for *.c and *.cpp files inside {DIR} directory above
+#   - Then it looks for functions with the signature 'int32_t a_function_test()'
+#       - They must end with the '_test 'suffix
+#       - They return 0 on failure and 1 on success (use ASSERTZ)
+#       - They may return i32 instead and (void) argument is optional
+#   - Tests are compiled into a 'tests.c' file. It defines three functions left for implementation:
+#       - void testing_started_cb(void)
+#       - void test_file_cb(const char *file)
+#       - int32_t test_function_cb(int (*f)(void), const char *fname): Must return 1 if f() returns 1, else 0
+#       - void testing_finished_cb(int32_t passed, int32_t failed)
+
+
+def main() -> None:
+    files = get_source_files(DIR)
+    signatures = get_signatures(files)
+    compiled_file = generate_file(signatures, os.getcwd())
+
+    print(f"\nTests main saved to {compiled_file}")
+
+
+def get_source_files(dir: str) -> List[str]:
+    dirs = [dir]
+    files: List[str] = []
+    while len(dirs) != 0:
+        dir = dirs.pop(0)
+        for filename in os.listdir(dir):
+            path = os.path.join(dir, filename)
+
+            if os.path.isdir(path):
+                dirs.append(dir)
+            elif os.path.isfile(path):
+                _, ext = os.path.splitext(path)
+                if ext in [".c", ".cpp"]:
+                    files.append(path)
+
+    return files
+
+
+def get_signatures(files: List[str]) -> Dict[str, List[str]]:
+    END_ESC = "\033[0m"
+    BOLD_ESC = "\033[1m"
+    ERROR_ESC = f"{BOLD_ESC}\033[91m"
+    WARNING_ESC = f"{BOLD_ESC}\033[93m"
+
+    REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*_test)\((?:void)?\)"
+
+    defined_in: Dict[str, str] = {}
+    collisions: Dict[str, List[str]] = {}
+    signatures: Dict[str, List[str]] = {}
+
+    for file in files:
+        with open(file, "r") as fd:
+            lines = fd.readlines()
+
+        signatures[file] = []
+        for line in map(lambda ln: ln.strip(), lines):
+            search = re.search(REGEX, line)
+            if search is None:
+                continue
+
+            signature = search.group(1)
+            signatures[file].append(signature)
+
+            if signature not in defined_in:
+                defined_in[signature] = file
+            else:
+                if signature not in collisions:
+                    collisions[signature] = [file]
+                else:
+                    collisions[signature].append(file)
+
+        if len(signatures[file]) != 0:
+            print(f"{file}: {len(signatures[file])} test(s)")
+        else:
+            print(f"{WARNING_ESC}!{END_ESC} {file}: No tests")
+
+    if len(signatures) == 0:
+        print(f"{WARNING_ESC}!{END_ESC} No tests found")
+
+    if len(collisions) != 0:
+        INDENT = 2 * " "
+
+        print("{ERROR_ESC}X{END_ESC} Signature collisions found")
+
+        for signature, collision_files in collisions.items():
+            print(f"{INDENT}- {signature}")
+            for file in collision_files:
+                print(f"{2*INDENT}- {file}")
+
+        exit(1)
+
+    return signatures
+
+
+def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
+    FILENAME = "test.c"
+
+    n_tests = 0
+    for file_signatures in signatures.values():
+        n_tests += len(file_signatures)
+
+    file = os.path.join(save_dir, FILENAME)
+    with open(file, "w") as fd:
+        fd.write("#include <stdint.h>\n")
+
+        fd.write("\ntypedef int32_t i32;\n")
+
+        fd.write("\nextern void testing_started_cb(void);\n")
+        fd.write("extern void test_file_cb(const char *file);\n")
+        fd.write("extern i32 test_function_cb(i32 (*f)(void), const char *fname);\n")
+        fd.write("extern void testing_finished_cb(i32 passed, i32 failed);\n")
+
+        for file, file_signatures in signatures.items():
+            fd.write(f"\n// From {file}\n")
+            for signature in file_signatures:
+                fd.write(f"extern i32 {signature}(void);\n")
+
+        fd.write("\nint main(void) {\n")
+        fd.write("\ti32 passed = 0;\n")
+        fd.write(f"\tconst i32 N_TESTS = {n_tests};\n")
+
+        fd.write("\n\ttesting_started_cb();\n")
+
+        for file, file_signatures in signatures.items():
+            fd.write(f'\n\ttest_file_cb("{file}");\n')
+            for signature in file_signatures:
+                fd.write(f'\tpassed += test_function_cb({signature}, "{signature}");\n')
+
+        fd.write("\n\ttesting_finished_cb(passed, N_TESTS - passed);\n")
+
+        fd.write("\n\treturn (passed == N_TESTS) ? 0 : 1;\n")
+        fd.write("}\n")
+
+    return file
+
+
+if __name__ == "__main__":
+    main()
