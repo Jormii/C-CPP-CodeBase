@@ -64,7 +64,7 @@ typedef enum BufEC {
                                                                                \
     BufEC T##Buf##_get(T##Buf buf, i32 idx, T *out);                           \
     BufEC T##Buf##_ptr(T##Buf buf, i32 idx, T **out);                          \
-    BufEC T##Buf##_ptr_const(T##Buf buf, i32 idx, const T **out);
+    BufEC T##Buf##_ptrc(T##Buf buf, i32 idx, const T **out);
 
 #define BUF_CONST_DECL(T)                                                      \
     typedef struct T##BufConst {                                               \
@@ -73,7 +73,7 @@ typedef enum BufEC {
     } T##BufConst;                                                             \
                                                                                \
     BufEC T##BufConst##_get(T##BufConst buf, i32 idx, T *out);                 \
-    BufEC T##BufConst##_ptr_const(T##BufConst buf, i32 idx, const T **out);
+    BufEC T##BufConst##_ptrc(T##BufConst buf, i32 idx, const T **out);
 
 #define BUF_FROM_C_ARR(c_arr) {.ptr = (c_arr), .len = C_ARR_LEN(c_arr)}
 
@@ -92,7 +92,7 @@ typedef enum BufEC {
         return BUF_OK;                                                         \
     }                                                                          \
                                                                                \
-    BufEC T##Buf_ptr_const(T##Buf buf, i32 idx, const T **out) {               \
+    BufEC T##Buf_ptrc(T##Buf buf, i32 idx, const T **out) {                    \
         _BUF_ASSERT_GET(idx, buf.ptr, buf.len, out)                            \
                                                                                \
         *out = buf.ptr + idx;                                                  \
@@ -107,7 +107,7 @@ typedef enum BufEC {
         return BUF_OK;                                                         \
     }                                                                          \
                                                                                \
-    BufEC T##BufConst_ptr_const(T##BufConst buf, i32 idx, const T **out) {     \
+    BufEC T##BufConst_ptrc(T##BufConst buf, i32 idx, const T **out) {          \
         _BUF_ASSERT_GET(idx, buf.ptr, buf.len, out)                            \
                                                                                \
         *out = buf.ptr + idx;                                                  \

@@ -140,52 +140,52 @@ i32 BUF_ptr_out_ptr_is_NULL_test(void) {
     return 1;
 }
 
-i32 BUF_ptr_const_test(void) {
+i32 BUF_ptrc_test(void) {
     i32 arr[] = {1, 2, 3};
     i32Buf buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
         const i32 *p;
-        ASSERTZ(i32Buf_ptr_const(buf, i, &p) == BUF_OK);
+        ASSERTZ(i32Buf_ptrc(buf, i, &p) == BUF_OK);
         ASSERTZ(p == (arr + i));
     }
 
     return 1;
 }
 
-i32 BUF_ptr_const_ptr_is_NULL_test(void) {
+i32 BUF_ptrc_ptr_is_NULL_test(void) {
     i32Buf buf = {.ptr = NULL, .len = 0};
 
     const i32 *p;
-    ASSERTZ(i32Buf_ptr_const(buf, 0, &p) == BUF_PTR_IS_NULL);
+    ASSERTZ(i32Buf_ptrc(buf, 0, &p) == BUF_PTR_IS_NULL);
 
     return 1;
 }
 
-i32 BUF_ptr_const_undeflow_test(void) {
+i32 BUF_ptrc_undeflow_test(void) {
     i32 arr[] = {1, 2, 3};
     i32Buf buf = BUF_FROM_C_ARR(arr);
 
     const i32 *p;
-    ASSERTZ(i32Buf_ptr_const(buf, -1, &p) == BUF_UNDERFLOW);
+    ASSERTZ(i32Buf_ptrc(buf, -1, &p) == BUF_UNDERFLOW);
 
     return 1;
 }
 
-i32 BUF_ptr_const_overflow_test(void) {
+i32 BUF_ptrc_overflow_test(void) {
     i32 arr[] = {1, 2, 3};
     i32Buf buf = BUF_FROM_C_ARR(arr);
 
     const i32 *p;
-    ASSERTZ(i32Buf_ptr_const(buf, buf.len, &p) == BUF_OVERFLOW);
+    ASSERTZ(i32Buf_ptrc(buf, buf.len, &p) == BUF_OVERFLOW);
 
     return 1;
 }
 
-i32 BUF_ptr_const_out_ptr_is_NULL_test(void) {
+i32 BUF_ptrc_out_ptr_is_NULL_test(void) {
     i32 arr[] = {1, 2, 3};
     i32Buf buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i32Buf_ptr_const(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
+    ASSERTZ(i32Buf_ptrc(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
 
     return 1;
 }
@@ -241,52 +241,52 @@ i32 BUF_CONST_get_out_ptr_is_NULL_test(void) {
     return 1;
 }
 
-i32 BUF_CONST_ptr_const_test(void) {
+i32 BUF_CONST_ptrc_test(void) {
     i64 arr[] = {1, 2, 3};
     i64BufConst buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
         const i64 *p;
-        ASSERTZ(i64BufConst_ptr_const(buf, i, &p) == BUF_OK);
+        ASSERTZ(i64BufConst_ptrc(buf, i, &p) == BUF_OK);
         ASSERTZ(p == (arr + i));
     }
 
     return 1;
 }
 
-i32 BUF_CONST_ptr_const_ptr_is_NULL_test(void) {
+i32 BUF_CONST_ptrc_ptr_is_NULL_test(void) {
     i64BufConst buf = {.ptr = NULL, .len = 0};
 
     const i64 *p;
-    ASSERTZ(i64BufConst_ptr_const(buf, 0, &p) == BUF_PTR_IS_NULL);
+    ASSERTZ(i64BufConst_ptrc(buf, 0, &p) == BUF_PTR_IS_NULL);
 
     return 1;
 }
 
-i32 BUF_CONST_ptr_const_undeflow_test(void) {
+i32 BUF_CONST_ptrc_undeflow_test(void) {
     i64 arr[] = {1, 2, 3};
     i64BufConst buf = BUF_FROM_C_ARR(arr);
 
     const i64 *p;
-    ASSERTZ(i64BufConst_ptr_const(buf, -1, &p) == BUF_UNDERFLOW);
+    ASSERTZ(i64BufConst_ptrc(buf, -1, &p) == BUF_UNDERFLOW);
 
     return 1;
 }
 
-i32 BUF_CONST_ptr_const_overflow_test(void) {
+i32 BUF_CONST_ptrc_overflow_test(void) {
     i64 arr[] = {1, 2, 3};
     i64BufConst buf = BUF_FROM_C_ARR(arr);
 
     const i64 *p;
-    ASSERTZ(i64BufConst_ptr_const(buf, buf.len, &p) == BUF_OVERFLOW);
+    ASSERTZ(i64BufConst_ptrc(buf, buf.len, &p) == BUF_OVERFLOW);
 
     return 1;
 }
 
-i32 BUF_CONST_ptr_const_out_ptr_is_NULL_test(void) {
+i32 BUF_CONST_ptrc_out_ptr_is_NULL_test(void) {
     i64 arr[] = {1, 2, 3};
     i64BufConst buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i64BufConst_ptr_const(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
+    ASSERTZ(i64BufConst_ptrc(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
 
     return 1;
 }
