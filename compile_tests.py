@@ -13,8 +13,8 @@ DIR = "./tests"
 #   - Tests are compiled into a 'tests.c' file. It defines three functions left for implementation:
 #       - void testing_started_cb(void)
 #       - void test_file_cb(const char *file)
-#       - int32_t test_function_cb(int (*f)(void), const char *fname): Must return 1 if f() returns 1, else 0
-#       - void testing_finished_cb(int32_t passed, int32_t failed)
+#       - i32 test_function_cb(int (*f)(void), const char *fname): Must return 1 if f() returns 1, else 0
+#       - void testing_finished_cb(i32 passed, i32 failed)
 
 
 def main() -> None:

@@ -29,11 +29,13 @@ void assertc_cb(i32 errno, const char *expr, const char *file, i32 line) {
 void testing_started_cb(void) {}
 
 // See compile_tests.py
-void test_file_cb(const char *file) { printf(BOLD HEADER "%s\n" ENDC, file); }
+void test_file_cb(const char *file) {
+    printf(BOLD HEADER "%s" ENDC "\n", file);
+}
 
 // See compile_tests.py
 i32 test_function_cb(i32 (*f)(void), const char *fname) {
-    printf("- " HEADER "%s\n" ENDC, fname);
+    printf("- " HEADER "%s" ENDC "\n", fname);
 
     i32 passed = (f() == 1) ? 1 : 0;
     if (!passed) {
