@@ -20,11 +20,6 @@ void assertz_cb(const char *expr, const char *file, i32 line) {
     fprintf(stderr, "Failed ASSERTZ %s:%d: %s\n", file, line, expr);
 }
 
-// See c.h::ASSERTC
-void assertc_cb(i32 errno, const char *expr, const char *file, i32 line) {
-    fprintf(stderr, "Failed ASSERTC=%d %s:%d: %s\n", errno, file, line, expr);
-}
-
 // See compile_tests.py
 void testing_started_cb(void) {}
 

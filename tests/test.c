@@ -1,9 +1,7 @@
 #include "c.h"
 
-BUF_DECL(i32)
-BUF_IMPL(i32)
-BUF_CONST_DECL(i64)
-BUF_CONST_IMPL(i64)
+BUF(i32)
+BUF_CONST(i64)
 
 // c.h::C_ARR_LEN
 i32 C_ARR_LEN_test(void) {
@@ -40,102 +38,14 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
 }
 
 // c.h::BUF
-i32 BUF_get_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    for (i32 i = 0; i < buf.len; ++i) {
-        i32 n;
-        ASSERTZ(i32Buf_get(buf, i, &n) == BUF_OK);
-        ASSERTZ(n == arr[i]);
-    }
-
-    return 1;
-}
-
-i32 BUF_get_ptr_is_NULL_test(void) {
-    i32Buf buf = {.ptr = NULL, .len = 0};
-
-    i32 n;
-    ASSERTZ(i32Buf_get(buf, 0, &n) == BUF_PTR_IS_NULL);
-
-    return 1;
-}
-
-i32 BUF_get_undeflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    i32 n;
-    ASSERTZ(i32Buf_get(buf, -1, &n) == BUF_UNDERFLOW);
-
-    return 1;
-}
-
-i32 BUF_get_overflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    i32 n;
-    ASSERTZ(i32Buf_get(buf, buf.len, &n) == BUF_OVERFLOW);
-
-    return 1;
-}
-
-i32 BUF_get_out_ptr_is_NULL_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i32Buf_get(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
-
-    return 1;
-}
-
 i32 BUF_ptr_test(void) {
     i32 arr[] = {1, 2, 3};
     i32Buf buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
-        i32 *p;
-        ASSERTZ(i32Buf_ptr(buf, i, &p) == BUF_OK);
+        i32 *p = i32Buf_ptr(buf, i);
         ASSERTZ(p == (arr + i));
     }
-
-    return 1;
-}
-
-i32 BUF_ptr_ptr_is_NULL_test(void) {
-    i32Buf buf = {.ptr = NULL, .len = 0};
-
-    i32 *p;
-    ASSERTZ(i32Buf_ptr(buf, 0, &p) == BUF_PTR_IS_NULL);
-
-    return 1;
-}
-
-i32 BUF_ptr_undeflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    i32 *p;
-    ASSERTZ(i32Buf_ptr(buf, -1, &p) == BUF_UNDERFLOW);
-
-    return 1;
-}
-
-i32 BUF_ptr_overflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    i32 *p;
-    ASSERTZ(i32Buf_ptr(buf, buf.len, &p) == BUF_OVERFLOW);
-
-    return 1;
-}
-
-i32 BUF_ptr_out_ptr_is_NULL_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i32Buf_ptr(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
 
     return 1;
 }
@@ -145,148 +55,22 @@ i32 BUF_ptrc_test(void) {
     i32Buf buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
-        const i32 *p;
-        ASSERTZ(i32Buf_ptrc(buf, i, &p) == BUF_OK);
+        const i32 *p = i32Buf_ptrc(buf, i);
         ASSERTZ(p == (arr + i));
     }
-
-    return 1;
-}
-
-i32 BUF_ptrc_ptr_is_NULL_test(void) {
-    i32Buf buf = {.ptr = NULL, .len = 0};
-
-    const i32 *p;
-    ASSERTZ(i32Buf_ptrc(buf, 0, &p) == BUF_PTR_IS_NULL);
-
-    return 1;
-}
-
-i32 BUF_ptrc_undeflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    const i32 *p;
-    ASSERTZ(i32Buf_ptrc(buf, -1, &p) == BUF_UNDERFLOW);
-
-    return 1;
-}
-
-i32 BUF_ptrc_overflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-
-    const i32 *p;
-    ASSERTZ(i32Buf_ptrc(buf, buf.len, &p) == BUF_OVERFLOW);
-
-    return 1;
-}
-
-i32 BUF_ptrc_out_ptr_is_NULL_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32Buf buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i32Buf_ptrc(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
 
     return 1;
 }
 
 // c.h::BUF_CONST
-i32 BUF_CONST_get_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-
-    for (i32 i = 0; i < buf.len; ++i) {
-        i64 n;
-        ASSERTZ(i64BufConst_get(buf, i, &n) == BUF_OK);
-        ASSERTZ(n == arr[i]);
-    }
-
-    return 1;
-}
-
-i32 BUF_CONST_get_ptr_is_NULL_test(void) {
-    i64BufConst buf = {.ptr = NULL, .len = 0};
-
-    i64 n;
-    ASSERTZ(i64BufConst_get(buf, 0, &n) == BUF_PTR_IS_NULL);
-
-    return 1;
-}
-
-i32 BUF_CONST_get_undeflow_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-
-    i64 n;
-    ASSERTZ(i64BufConst_get(buf, -1, &n) == BUF_UNDERFLOW);
-
-    return 1;
-}
-
-i32 BUF_CONST_get_overflow_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-
-    i64 n;
-    ASSERTZ(i64BufConst_get(buf, buf.len, &n) == BUF_OVERFLOW);
-
-    return 1;
-}
-
-i32 BUF_CONST_get_out_ptr_is_NULL_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i64BufConst_get(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
-
-    return 1;
-}
-
 i32 BUF_CONST_ptrc_test(void) {
     i64 arr[] = {1, 2, 3};
     i64BufConst buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
-        const i64 *p;
-        ASSERTZ(i64BufConst_ptrc(buf, i, &p) == BUF_OK);
+        const i64 *p = i64BufConst_ptrc(buf, i);
         ASSERTZ(p == (arr + i));
     }
-
-    return 1;
-}
-
-i32 BUF_CONST_ptrc_ptr_is_NULL_test(void) {
-    i64BufConst buf = {.ptr = NULL, .len = 0};
-
-    const i64 *p;
-    ASSERTZ(i64BufConst_ptrc(buf, 0, &p) == BUF_PTR_IS_NULL);
-
-    return 1;
-}
-
-i32 BUF_CONST_ptrc_undeflow_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-
-    const i64 *p;
-    ASSERTZ(i64BufConst_ptrc(buf, -1, &p) == BUF_UNDERFLOW);
-
-    return 1;
-}
-
-i32 BUF_CONST_ptrc_overflow_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-
-    const i64 *p;
-    ASSERTZ(i64BufConst_ptrc(buf, buf.len, &p) == BUF_OVERFLOW);
-
-    return 1;
-}
-
-i32 BUF_CONST_ptrc_out_ptr_is_NULL_test(void) {
-    i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
-    ASSERTZ(i64BufConst_ptrc(buf, 0, NULL) == BUF_OUT_PTR_IS_NULL);
 
     return 1;
 }
@@ -314,6 +98,41 @@ i32 BUF_FROM_C_ARR_NULL_test(void) {
 
     ASSERTZ(buf.ptr == NULL);
     ASSERTZ(buf.len == 0);
+
+    return 1;
+}
+
+// c.h::_BUF_ASSERT
+i32 _BUF_ASSERT_call(i32Buf buf, i32 idx) {
+    _BUF_ASSERT(idx, buf.ptr, buf.len);
+    return 1;
+}
+
+i32 _BUF_ASSERT_ptr_is_NULL_test(void) {
+    i32Buf buf = {.ptr = NULL, .len = 0};
+
+    i32 ok = _BUF_ASSERT_call(buf, 0);
+    ASSERTZ(!ok);
+
+    return 1;
+}
+
+i32 _BUF_ASSERT_undeflow_test(void) {
+    i32 arr[] = {1, 2, 3};
+    i32Buf buf = BUF_FROM_C_ARR(arr);
+
+    i32 ok = _BUF_ASSERT_call(buf, -1);
+    ASSERTZ(!ok);
+
+    return 1;
+}
+
+i32 _BUF_ASSERT_overflow_test(void) {
+    i32 arr[] = {1, 2, 3};
+    i32Buf buf = BUF_FROM_C_ARR(arr);
+
+    i32 ok = _BUF_ASSERT_call(buf, buf.len);
+    ASSERTZ(!ok);
 
     return 1;
 }
