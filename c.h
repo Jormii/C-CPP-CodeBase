@@ -35,6 +35,41 @@ extern void assertz_cb(const char *expr, const char *file, i32 line);
 #define C_ARR_LEN(c_arr)                                                       \
     (((c_arr) == NULL) ? 0 : sizeof((c_arr)) / sizeof(*(c_arr)))
 
+// Results wrap a flag and a value
+#define RES(T)                                                                 \
+    typedef struct T##Res {                                                    \
+        i32 ok;                                                                \
+        T value;                                                               \
+    } T##Res;                                                                  \
+                                                                               \
+    T *T##Res_get(T##Res *res) {                                               \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }                                                                          \
+                                                                               \
+    const T *T##Res_getc(T##Res *res) {                                        \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }
+
+#define RES_CONST(T)                                                           \
+    typedef struct T##ResConst {                                               \
+        i32 ok;                                                                \
+        const T value;                                                         \
+    } T##ResConst;                                                             \
+                                                                               \
+    const T *T##ResConst_getc(T##ResConst *res) {                              \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }
+
+#define RES_OK(RES, val) (RES){.ok = 1, .value = val};
+#define RES_FAIL(RES, EXPR)                                                    \
+    if (!(EXPR)) {                                                             \
+        assertz_cb(#EXPR, __FILE__, __LINE__);                                 \
+        return (RES){.ok = 0};                                                 \
+    }
+
 // Buffers store a pointer and a length
 #define BUF(T)                                                                 \
     typedef struct T##Buf {                                                    \

@@ -1,5 +1,8 @@
 #include "c.h"
 
+RES(i32)
+RES_CONST(i64)
+
 BUF(i32)
 BUF_CONST(i64)
 
@@ -33,6 +36,54 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
 #pragma clang diagnostic ignored "-Wsizeof-pointer-div"
     ASSERTZ(C_ARR_LEN(decay) != LEN);
 #pragma clang diagnostic pop
+
+    return 1;
+}
+
+// c.h::RES
+i32Res is_odd(int n) {
+    RES_FAIL(i32Res, (n % 2) == 1);
+    return RES_OK(i32Res, n);
+}
+
+i32 RES_get_test(void) {
+    i32Res odd_res = is_odd(1);
+    i32Res even_res = is_odd(2);
+    i32 *odd = i32Res_get(&odd_res);
+    i32 *even = i32Res_get(&even_res);
+
+    ASSERTZ(odd_res.ok);
+    ASSERTZ(odd != NULL);
+    ASSERTZ(!even_res.ok);
+    ASSERTZ(even == NULL);
+
+    return 1;
+}
+
+i32 RES_getc_test(void) {
+    i32Res ok_res = {.ok = 1};
+    i32Res fail_res = {.ok = 0};
+    const i32 *ok = i32Res_getc(&ok_res);
+    const i32 *fail = i32Res_getc(&fail_res);
+
+    ASSERTZ(ok_res.ok);
+    ASSERTZ(ok != NULL);
+    ASSERTZ(!fail_res.ok);
+    ASSERTZ(fail == NULL);
+
+    return 1;
+}
+// c.h::RES_CONST
+i32 RES_CONST_get_test(void) {
+    i64ResConst ok_res = {.ok = 1};
+    i64ResConst fail_res = {.ok = 0};
+    const i64 *ok = i64ResConst_getc(&ok_res);
+    const i64 *fail = i64ResConst_getc(&fail_res);
+
+    ASSERTZ(ok_res.ok);
+    ASSERTZ(ok != NULL);
+    ASSERTZ(!fail_res.ok);
+    ASSERTZ(fail == NULL);
 
     return 1;
 }
