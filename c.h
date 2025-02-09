@@ -52,13 +52,13 @@ extern void assertz_cb(const char *expr, const char *file, i32 line);
         return &(res->value);                                                  \
     }
 
-#define RES_CONST(T)                                                           \
-    typedef struct T##ResConst {                                               \
+#define RES_C(T)                                                               \
+    typedef struct T##Res {                                                    \
         i32 ok;                                                                \
         const T value;                                                         \
-    } T##ResConst;                                                             \
+    } T##ResC;                                                                 \
                                                                                \
-    const T *T##ResConst_getc(T##ResConst *res) {                              \
+    const T *T##ResC_getc(T##ResC *res) {                                      \
         ASSERTZ(res->ok);                                                      \
         return &(res->value);                                                  \
     }
@@ -87,13 +87,13 @@ extern void assertz_cb(const char *expr, const char *file, i32 line);
         return buf.ptr + idx;                                                  \
     }
 
-#define BUF_CONST(T)                                                           \
-    typedef struct T##BufConst {                                               \
+#define BUF_C(T)                                                               \
+    typedef struct T##BufC {                                                   \
         const T *ptr;                                                          \
         const i32 len;                                                         \
-    } T##BufConst;                                                             \
+    } T##BufC;                                                                 \
                                                                                \
-    const T *T##BufConst_ptrc(T##BufConst buf, i32 idx) {                      \
+    const T *T##BufC_ptrc(T##BufC buf, i32 idx) {                              \
         _BUF_ASSERT(idx, buf.ptr, buf.len)                                     \
         return buf.ptr + idx;                                                  \
     }

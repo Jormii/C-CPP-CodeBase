@@ -1,10 +1,10 @@
 #include "c.h"
 
 RES(i32)
-RES_CONST(i64)
+RES_C(i64)
 
 BUF(i32)
-BUF_CONST(i64)
+BUF_C(i64)
 
 // c.h::C_ARR_LEN
 i32 C_ARR_LEN_test(void) {
@@ -73,12 +73,12 @@ i32 RES_getc_test(void) {
 
     return 1;
 }
-// c.h::RES_CONST
-i32 RES_CONST_get_test(void) {
-    i64ResConst ok_res = {.ok = 1};
-    i64ResConst fail_res = {.ok = 0};
-    const i64 *ok = i64ResConst_getc(&ok_res);
-    const i64 *fail = i64ResConst_getc(&fail_res);
+// c.h::RES_C
+i32 RES_C_get_test(void) {
+    i64ResC ok_res = {.ok = 1};
+    i64ResC fail_res = {.ok = 0};
+    const i64 *ok = i64ResC_getc(&ok_res);
+    const i64 *fail = i64ResC_getc(&fail_res);
 
     ASSERTZ(ok_res.ok);
     ASSERTZ(ok != NULL);
@@ -113,13 +113,13 @@ i32 BUF_ptrc_test(void) {
     return 1;
 }
 
-// c.h::BUF_CONST
-i32 BUF_CONST_ptrc_test(void) {
+// c.h::BUF_C
+i32 BUF_C_ptrc_test(void) {
     i64 arr[] = {1, 2, 3};
-    i64BufConst buf = BUF_FROM_C_ARR(arr);
+    i64BufC buf = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
-        const i64 *p = i64BufConst_ptrc(buf, i);
+        const i64 *p = i64BufC_ptrc(buf, i);
         ASSERTZ(p == (arr + i));
     }
 
