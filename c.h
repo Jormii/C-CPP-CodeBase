@@ -103,5 +103,6 @@ extern void assertz_cb(const char *expr, const char *file, i32 line);
 
 #define _BUF_ASSERT(idx, ptr, len)                                             \
     ASSERTZ(ptr != NULL);                                                      \
+    ASSERTZ(len >= 0);                                                         \
     ASSERTZ(idx >= 0);                                                         \
     ASSERTZ(idx < len);
