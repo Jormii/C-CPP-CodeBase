@@ -1,9 +1,10 @@
-#ifndef C_H
-#define C_H
+#pragma once
 
 #include <stdint.h>
 
+typedef uint8_t u8;
 typedef int32_t i32;
+typedef uint32_t u32;
 typedef int64_t i64;
 
 #define MAY(EXPR)  // Explicit comment
@@ -104,5 +105,3 @@ extern void assertz_cb(const char *expr, const char *file, i32 line);
     ASSERTZ(ptr != NULL);                                                      \
     ASSERTZ(idx >= 0);                                                         \
     ASSERTZ(idx < len);
-
-#endif
