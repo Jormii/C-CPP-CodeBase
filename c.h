@@ -13,7 +13,7 @@ typedef int64_t i64;
 
 // To indicate if a function was tested
 #define TESTED()
-#define UNTESTED(EXPR) MUST(0 && #EXPR)
+#define UNTESTED(MSG) MUST(0 && MSG)
 
 #ifdef NDEBUG
 #define MUST(EXPR)    // Assert. Exits if EXPR is false
