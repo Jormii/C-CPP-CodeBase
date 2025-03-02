@@ -8,5 +8,5 @@ if [ $? -eq 0 ]; then
     clang++ -c ./tests/test.cpp -o ./tests/test.cpp.o $CPP_FLAGS
 
     clang++ -c test.cpp $CPP_FLAGS
-    clang++ -o test ./test.o ./cb.o ./tests/test.c.o ./tests/test.cpp.o
+    clang++ -o test.out ./test.o ./cb.o ./tests/test.c.o ./tests/test.cpp.o
 fi
