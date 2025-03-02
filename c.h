@@ -10,6 +10,10 @@ typedef int64_t i64;
 #define MAY(EXPR)  // Explicit comment
 #define NOTE(EXPR) // Explicit comment
 
+// To indicate if a function was tested
+#define TESTED
+#define UNTESTED MUST(0 && "UNTESTED")
+
 #ifdef NDEBUG
 #define MUST(EXPR)    // Assert. Exits if EXPR is false
 #define ASSERTZ(EXPR) // Assert. Returns 0 if EXPR is false

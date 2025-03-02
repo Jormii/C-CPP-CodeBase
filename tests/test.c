@@ -41,7 +41,7 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
 }
 
 // c.h::RES
-i32Res is_odd(int n) {
+i32Res is_odd(i32 n) {
     RES_FAIL(i32Res, (n % 2) == 1);
     return RES_OK(i32Res, n);
 }
