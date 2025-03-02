@@ -10,10 +10,10 @@ DIR = "./tests"
 #       - They must end with the '_test 'suffix
 #       - They return 0 on failure and 1 on success (use ASSERTZ)
 #       - They may return i32 instead and (void) argument is optional
-#   - Tests are compiled into a 'tests.c' file. It defines three functions left for implementation:
+#   - Tests are compiled into a 'tests.cpp' file. It defines three functions left for implementation:
 #       - void testing_started_cb(void)
 #       - void test_file_cb(const char *file)
-#       - i32 test_function_cb(int (*f)(void), const char *fname): Must return 1 if f() returns 1, else 0
+#       - i32 test_function_cb(i32 (*f)(void), const char *fname): Must return 1 if f() returns 1, else 0
 #       - void testing_finished_cb(i32 passed, i32 failed)
 
 
@@ -100,7 +100,7 @@ def get_signatures(files: List[str]) -> Dict[str, List[str]]:
 
 
 def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
-    FILENAME = "test.c"
+    FILENAME = "test.cpp"
 
     n_tests = 0
     for file_signatures in signatures.values():
@@ -112,15 +112,23 @@ def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
 
         fd.write("\ntypedef int32_t i32;\n")
 
-        fd.write("\nextern void testing_started_cb(void);\n")
+        fd.write("\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n")
+        fd.write("extern void testing_started_cb(void);\n")
         fd.write("extern void test_file_cb(const char *file);\n")
         fd.write("extern i32 test_function_cb(i32 (*f)(void), const char *fname);\n")
         fd.write("extern void testing_finished_cb(i32 passed, i32 failed);\n")
+        fd.write("#ifdef __cplusplus\n}\n#endif\n")
 
         for file, file_signatures in signatures.items():
+            _, ext = os.path.splitext(file)
+
             fd.write(f"\n// From {file}\n")
+            if ext == ".c":
+                fd.write("#ifdef __cplusplus\nextern \"C\" {\n#endif\n")
             for signature in file_signatures:
                 fd.write(f"extern i32 {signature}(void);\n")
+            if ext == ".c":
+                fd.write("#ifdef __cplusplus\n}\n#endif\n")
 
         fd.write("\nint main(void) {\n")
         fd.write("\ti32 passed = 0;\n")
