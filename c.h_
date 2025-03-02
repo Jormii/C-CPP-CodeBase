@@ -1,0 +1,135 @@
+// Results wrap a flag and a value
+#define RES(T)                                                                 \
+    typedef struct T##Res {                                                    \
+        i32 ok;                                                                \
+        T value;                                                               \
+    } T##Res;                                                                  \
+                                                                               \
+    T *T##Res_get(T##Res *res) {                                               \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }                                                                          \
+                                                                               \
+    const T *T##Res_getc(T##Res *res) {                                        \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }
+
+#define RES_C(T)                                                               \
+    typedef struct T##Res {                                                    \
+        i32 ok;                                                                \
+        const T value;                                                         \
+    } T##ResC;                                                                 \
+                                                                               \
+    const T *T##ResC_getc(T##ResC *res) {                                      \
+        ASSERTZ(res->ok);                                                      \
+        return &(res->value);                                                  \
+    }
+
+#define RES_OK(RES, val) (RES){.ok = 1, .value = val};
+#define RES_FAIL(RES, EXPR)                                                    \
+    if (!(EXPR)) {                                                             \
+        assertz_cb(#EXPR, __FILE__, __LINE__);                                 \
+        return (RES){.ok = 0};                                                 \
+    }
+
+// Buffers store a pointer and a length
+#define BUF(T)                                                                 \
+    typedef struct T##Buf {                                                    \
+        T *ptr;                                                                \
+        const i32 len;                                                         \
+    } T##Buf;                                                                  \
+                                                                               \
+    T *T##Buf_ptr(T##Buf buf, i32 idx) {                                       \
+        _BUF_ASSERT(idx, buf.ptr, buf.len)                                     \
+        return buf.ptr + idx;                                                  \
+    }                                                                          \
+                                                                               \
+    const T *T##Buf_ptrc(T##Buf buf, i32 idx) {                                \
+        _BUF_ASSERT(idx, buf.ptr, buf.len)                                     \
+        return buf.ptr + idx;                                                  \
+    }
+
+#define BUF_C(T)                                                               \
+    typedef struct T##BufC {                                                   \
+        const T *ptr;                                                          \
+        const i32 len;                                                         \
+    } T##BufC;                                                                 \
+                                                                               \
+    const T *T##BufC_ptrc(T##BufC buf, i32 idx) {                              \
+        _BUF_ASSERT(idx, buf.ptr, buf.len)                                     \
+        return buf.ptr + idx;                                                  \
+    }
+
+typedef enum Buf2dEC {
+    BUF_2D_OK,
+    // Members
+    BUF_2D_PTR_IS_NULL,
+    // Arguments
+    BUF_2D_W_UNDERFLOW,
+    BUF_2D_H_UNDERFLOW,
+    BUF_2D_W_OVERFLOW,
+    BUF_2D_H_OVERFLOW,
+    BUF_2D_OUT_PTR_IS_NULL,
+} Buf2dEC;
+
+#define BUF_2D_DECL(T)
+#define BUF_2D_CONST_DECL(T)
+
+#define BUF_2D_IMPL(T)
+#define BUF_2D_CONST_IMPL(T)
+
+#define BUFFER_2D(TYPE)                                                        \
+    typedef struct TYPE##Buf2D {                                               \
+        TYPE *ptr;                                                             \
+        const i32 width;                                                       \
+        const i32 height;                                                      \
+    } Type##Buf2D;                                                             \
+                                                                               \
+    Buffer2D_EC TYPE##Buf2D_get(TYPE##Buf2D buf, i32 i, i32 j, TYPE *out) {    \
+        BUFFER_2D_ASSERT_GET(i, j, buf.ptr, buf.width, buf.height)             \
+        ASSERTC(errno == BUF_2D_OK, errno);                                    \
+                                                                               \
+        *out = buf.ptr[i + j * buf.width];                                     \
+        return BUF_2D_OK;                                                      \
+    }                                                                          \
+                                                                               \
+    Buffer2D_EC TYPE##Buf2D_get_ptr(TYPE##Buf2D buf, i32 i, i32 j,             \
+                                    TYPE **out) {                              \
+        BUFFER_2D_ASSERT_GET(i, j, buf.ptr, buf.width, buf.height)             \
+        ASSERTC(out != NULL);                                                  \
+                                                                               \
+        *out = buf.ptr + (i + j * buf.width);                                  \
+        return BUF_2D_OK;                                                      \
+    }
+
+#define BUFFER_2D_ASSERT_GET(i, j, ptr, rows, cols)                            \
+    ASSERTC(ptr != NULL, BUF_2D_PTR_IS_NULL);                                  \
+    ASSERTC(i >= 0, BUF_2D_W_UNDERFLOW);                                       \
+    ASSERTC(j >= 0, BUF_2D_H_UNDERFLOW);                                       \
+    ASSERTC(i < rows, BUF_2D_W_OVERFLOW);                                      \
+    ASSERTC(i < cols, BUF_2D_H_OVERFLOW);
+
+
+// Defines a struct that packs a single value. Meant for arrays of structs
+// It also declares two functions to turn an array of STRUCT to its SUPERTYPE.
+//  Both return NULL if input ptr is NULL
+// Motivation: Assume we have two int arrays and a function that should receive
+//  exclusively one of them. We might make the mistake of passing the wrong
+//  array. OUT_OF_BAND allows for the creation of a specific, redundant type to
+//  prevent bugs
+#define OUT_OF_BAND(STRUCT, SUPERTYPE)                                         \
+    typedef struct STRUCT {                                                    \
+        SUPERTYPE super;                                                       \
+    } STRUCT;                                                                  \
+                                                                               \
+    SUPERTYPE *STRUCT##_to_##SUPERTYPE(STRUCT *ptr) {                          \
+        ASSERTZ(ptr != NULL);                                                  \
+        return &(ptr->super);                                                  \
+    }                                                                          \
+                                                                               \
+    const SUPERTYPE *STRUCT##_to_##SUPERTYPE##_const(const STRUCT *ptr) {      \
+        ASSERTZ(ptr != NULL);                                                  \
+        return &(ptr->super);                                                  \
+    }
+
