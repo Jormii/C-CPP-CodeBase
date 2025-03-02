@@ -1,4 +1,10 @@
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ENDC "\033[0m"
 #define BOLD "\033[1m"
@@ -13,6 +19,7 @@ typedef int32_t i32;
 // See c.h::MUST
 void must_cb(const char *expr, const char *file, i32 line) {
     fprintf(stderr, "Failed MUST %s:%d: %s\n", file, line, expr);
+    exit(1);
 }
 
 // See c.h::ASSERTZ
@@ -45,3 +52,7 @@ void testing_finished_cb(i32 passed, i32 failed) {
     printf(PASSED "\nPASSED:" ENDC " %d\n", passed);
     printf(FAILED "FAILED:" ENDC " %d\n", failed);
 }
+
+#ifdef __cplusplus
+}
+#endif
