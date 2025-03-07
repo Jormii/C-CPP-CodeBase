@@ -134,6 +134,151 @@ i32 Arr_operator_eq_test(void) {
     return 1;
 }
 
+// cpp.hpp::Mat
+i32 Mat_len_test(void) {
+    Mat<2, i32> mat;
+    ASSERTZ(mat.len() == 2);
+
+    return 1;
+}
+
+i32 Mat_get_test(void) {
+    Mat<2, i32> mat = {
+        0, 1, //
+        2, 3, //
+    };
+    const Mat<2, i32> mat_const = {
+        0, 1, //
+        2, 3, //
+    };
+    ASSERTZ(mat.len() == mat_const.len());
+
+    i32 len = mat.len();
+    for (i32 i = 0, idx = 0; i < len; ++i) {
+        for (i32 j = 0; j < len; ++j, ++idx) {
+            i32 *p = mat.get(i, j);
+            const i32 *pc = mat.get(i, j);
+            const i32 *pc_const = mat_const.get(i, j);
+
+            i32 idx = i * len + j;
+            ASSERTZ(*p == idx);
+            ASSERTZ(p == (mat.ptr + idx));
+            ASSERTZ(pc == (mat.ptr + idx));
+            ASSERTZ(pc_const == (mat_const.ptr + idx));
+        }
+    }
+
+    return 1;
+}
+
+i32 Mat_trans_test(void) {
+    M2i mat = {
+        0, 1, //
+        2, 3, //
+    };
+    M2i expected_trans = {
+        0, 2, //
+        1, 3, //
+    };
+
+    M2i trans = mat.trans();
+    ASSERTZ(trans == expected_trans);
+
+    return 1;
+}
+
+i32 Mat_I_test(void) {
+    M2i expected_I = {
+        1, 0, //
+        0, 1, //
+    };
+
+    M2i I = M2i::I();
+    ASSERTZ(I == expected_I);
+
+    return 1;
+}
+
+i32 Mat_ones_test(void) {
+    M2i expected_ones = {
+        1, 1, //
+        1, 1, //
+    };
+
+    M2i ones = M2i::ones();
+    ASSERTZ(ones == expected_ones);
+
+    return 1;
+}
+
+i32 Mat_zeros_test(void) {
+    M2i expected_zeros = {
+        0, 0, //
+        0, 0, //
+    };
+
+    M2i zeros = M2i::zeros();
+    ASSERTZ(zeros == expected_zeros);
+
+    return 1;
+}
+
+i32 Mat_operator_mult_Arr_test(void) {
+    M2i m = {
+        4, 5, //
+        6, 7, //
+    };
+    V2i u = {2, 3};
+    V2i expected_vmult = {23, 33};
+
+    V2i vmult = m * u;
+    ASSERTZ(vmult == expected_vmult);
+
+    return 1;
+}
+
+i32 Mat_operator_mult_Mat_test(void) {
+    M2i m = {
+        2, 3, //
+        4, 5, //
+    };
+    M2i n = {
+        6, 7, //
+        8, 9, //
+    };
+    M2i expected_mmult = {
+        36, 41, //
+        64, 73, //
+    };
+
+    M2i mmult = m * n;
+    ASSERTZ(mmult == expected_mmult);
+
+    return 1;
+}
+
+i32 Mat_operator_eq_test(void) {
+    M2i m = {
+        2, 3, //
+        4, 5, //
+    };
+    M2i n = {
+        2, 4, //
+        3, 5, //
+    };
+    M2i o = {
+        4, 5, //
+        2, 3, //
+    };
+
+    ASSERTZ(m == m);
+    ASSERTZ(m != n);
+    ASSERTZ(m != o);
+    ASSERTZ(n != o);
+
+    return 1;
+}
+
 // cpp.hpp::(Functions)
 i32 eq_test(void) {
     ASSERTZ(eq(2, 2));
@@ -223,6 +368,62 @@ i32 bary_v_test(void) {
     float *out = bary_v(u, v, w, a, b, g, bary, C_ARR_LEN(u));
     ASSERTZ(out != NULL);
     ASSERTZ(eq_v(bary, expected_bary, C_ARR_LEN(u)));
+
+    return 1;
+}
+
+i32 trans_m_test(void) {
+    i32 m[] = {
+        0, 1, //
+        2, 3, //
+    };
+    i32 expected_trans[C_ARR_LEN(m)] = {
+        0, 2, //
+        1, 3, //
+    };
+
+    i32 trans[C_ARR_LEN(m)];
+    const i32 *out = trans_m(m, trans, C_ARR_LEN(m) >> 1);
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(trans, expected_trans, C_ARR_LEN(m)));
+
+    return 1;
+}
+
+i32 vmult_m_test(void) {
+    i32 m[] = {
+        4, 5, //
+        6, 7, //
+    };
+    i32 u[C_ARR_LEN(m) >> 1] = {2, 3};
+    i32 expected_vmult[C_ARR_LEN(u)] = {23, 33};
+
+    i32 vmult[C_ARR_LEN(u)];
+    const i32 *out = vmult_m(m, u, vmult, C_ARR_LEN(u));
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(vmult, expected_vmult, C_ARR_LEN(u)));
+
+    return 1;
+}
+
+i32 mmult_m_test(void) {
+    i32 m[] = {
+        2, 3, //
+        4, 5, //
+    };
+    i32 n[C_ARR_LEN(m)] = {
+        6, 7, //
+        8, 9, //
+    };
+    i32 expected_mmult[C_ARR_LEN(m)] = {
+        36, 41, //
+        64, 73, //
+    };
+
+    i32 mmult[C_ARR_LEN(m)];
+    const i32 *out = mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1);
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m) >> 1));
 
     return 1;
 }

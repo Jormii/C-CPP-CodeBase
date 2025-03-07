@@ -70,6 +70,36 @@ using V3i = Arr<3, i32>;
 using V3f = Arr<3, float>;
 
 static_assert(sizeof(Arr<2, i32>) == (2 * sizeof(i32)));
+
+template <i32 N, typename T>
+struct Mat {
+    static_assert(N > 0);
+
+    T ptr[N * N];
+
+    i32 len() const;
+    T *get(i32 row, i32 col);
+    const T *get(i32 row, i32 col) const;
+
+    Mat trans() const;
+
+    static Mat I();
+    static Mat ones();
+    static Mat zeros();
+
+    Arr<N, T> operator*(const Arr<N, T> &rhs) const;
+    Mat operator*(const Mat &rhs) const;
+    bool operator==(const Mat &rhs) const;
+};
+
+using M2i = Mat<2, i32>;
+
+static_assert(sizeof(Mat<2, i32>) == (2 * 2 * sizeof(i32)));
+
+#pragma endregion
+
+#pragma region function
+
 template <typename T>
 i32 eq(const T &x, const T &y);
 
@@ -96,6 +126,14 @@ template <typename T>
     float *out, i32 len                 //
 );
 
+template <typename T>
+[[nodiscard]] T *trans_m(const T *m, T *out, i32 len);
+
+template <typename T>
+[[nodiscard]] T *vmult_m(const T *m, const T *u, T *out, i32 len);
+
+template <typename T>
+[[nodiscard]] T *mmult_m(const T *m, const T *n, T *out, i32 len);
 
 #pragma endregion
 
@@ -220,6 +258,106 @@ bool Arr<N, T>::operator==(const Arr &rhs) const {
     return eq_v(ptr, rhs.ptr, N);
 }
 
+template <i32 N, typename T>
+i32 Mat<N, T>::len() const {
+    TESTED();
+    return N;
+}
+
+template <i32 N, typename T>
+T *Mat<N, T>::get(i32 row, i32 col) {
+    TESTED();
+    C_ARR_IDX_ASSERT(ptr, N, row);
+    C_ARR_IDX_ASSERT(ptr, N, col);
+
+    return ptr + (row * N + col);
+};
+
+template <i32 N, typename T>
+const T *Mat<N, T>::get(i32 row, i32 col) const {
+    TESTED();
+    C_ARR_IDX_ASSERT(ptr, N, row);
+    C_ARR_IDX_ASSERT(ptr, N, col);
+
+    return ptr + (row * N + col);
+};
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::trans() const {
+    TESTED();
+
+    Mat t;
+    const T *out = trans_m(ptr, t.ptr, N);
+    MUST(out != NULL);
+
+    return t;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::I() {
+    TESTED();
+
+    Mat m = Mat::zeros();
+    for (i32 i = 0; i < N; ++i) {
+        m.ptr[i * N + i] = 1;
+    }
+
+    return m;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::ones() {
+    TESTED();
+
+    Mat m;
+    for (i32 i = 0; i < N * N; ++i) {
+        m.ptr[i] = 1;
+    }
+
+    return m;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::zeros() {
+    TESTED();
+
+    Mat m;
+    for (i32 i = 0; i < N * N; ++i) {
+        m.ptr[i] = 0;
+    }
+
+    return m;
+}
+
+template <i32 N, typename T>
+Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
+    TESTED();
+
+    Arr<N, T> vmult;
+    const T *out = vmult_m(ptr, rhs.ptr, vmult.ptr, N);
+    MUST(out != NULL);
+
+    return vmult;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
+    TESTED();
+
+    Mat mmult;
+    const T *out = mmult_m(ptr, rhs.ptr, mmult.ptr, N);
+    MUST(out != NULL);
+
+    return mmult;
+}
+
+template <i32 N, typename T>
+bool Mat<N, T>::operator==(const Mat &rhs) const {
+    TESTED();
+    return eq_v(ptr, rhs.ptr, N);
+}
+
+
 template <typename T>
 i32 eq(const T &x, const T &y) {
     TESTED();
@@ -326,3 +464,52 @@ float *bary_v(                          //
     return out;
 }
 
+template <typename T>
+T *trans_m(const T *m, T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(m, len);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        for (i32 j = 0; j < len; ++j) {
+            out[j * len + i] = m[i * len + j];
+        }
+    }
+
+    return out;
+}
+
+template <typename T>
+T *vmult_m(const T *m, const T *u, T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(m, len);
+    C_ARR_ASSERT(u, len);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = dot_v(m + i * len, u, len);
+    }
+
+    return out;
+}
+
+template <typename T>
+T *mmult_m(const T *m, const T *n, T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(m, len);
+    C_ARR_ASSERT(n, len);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0, idx = 0; i < len; ++i) {
+        for (i32 j = 0; j < len; ++j, ++idx) {
+            T dot = 0;
+            for (i32 dot_idx = 0; dot_idx < len; ++dot_idx) {
+                dot += m[i * len + dot_idx] * n[dot_idx * len + j];
+            }
+
+            out[idx] = dot;
+        }
+    }
+
+    return out;
+}
