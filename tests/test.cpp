@@ -65,7 +65,7 @@ i32 Arr_mag_test(void) {
 i32 Arr_norm_test(void) {
     V2i u = {3, 4};
     float expected_mag = 5.0f;
-    Arr<2, float> expected_norm = {3.0f / expected_mag, 4.0f / expected_mag};
+    V2f expected_norm = {3.0f / expected_mag, 4.0f / expected_mag};
 
     Arr norm = u.norm();
     ASSERTZ(norm == expected_norm);
@@ -280,6 +280,28 @@ i32 Mat_operator_eq_test(void) {
 }
 
 // cpp.hpp::(Functions)
+i32 min_test(void) {
+    i32 a = 1;
+    i32 b = 2;
+    i32 expected_min = a;
+
+    i32 min_ = min(a, b);
+    ASSERTZ(min_ == expected_min);
+
+    return 1;
+}
+
+i32 max_test(void) {
+    i32 a = 1;
+    i32 b = 2;
+    i32 expected_max = b;
+
+    i32 max_ = max(a, b);
+    ASSERTZ(max_ == expected_max);
+
+    return 1;
+}
+
 i32 eq_test(void) {
     ASSERTZ(eq(2, 2));
     ASSERTZ(!eq(2, 3));
@@ -311,7 +333,7 @@ i32 norm_v_test(void) {
     float expected_norm[C_ARR_LEN(u)] = {3.0f / mag, 4.0f / mag};
 
     float norm[C_ARR_LEN(u)];
-    float *out = norm_v(u, norm, C_ARR_LEN(u));
+    const float *out = norm_v(u, norm, C_ARR_LEN(u));
     ASSERTZ(out != NULL);
     ASSERTZ(eq_v(norm, expected_norm, C_ARR_LEN(u)));
 
@@ -348,9 +370,23 @@ i32 sub_v_test(void) {
     i32 expected_sub[C_ARR_LEN(u)] = {-2, -6};
 
     i32 sub[C_ARR_LEN(u)];
-    i32 *out = sub_v(u, v, sub, C_ARR_LEN(u));
+    const i32 *out = sub_v(u, v, sub, C_ARR_LEN(u));
     ASSERTZ(out != NULL);
     ASSERTZ(eq_v(sub, expected_sub, C_ARR_LEN(u)));
+
+    return 1;
+}
+
+i32 mix_v_test(void) {
+    i32 u[] = {2, 3};
+    i32 v[C_ARR_LEN(u)] = {8, 17};
+    float t = 0.5f;
+    float expected_mix[C_ARR_LEN(u)] = {5, 10};
+
+    float mix[C_ARR_LEN(u)];
+    const float *out = mix_v(u, v, t, mix, C_ARR_LEN(u));
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(mix, expected_mix, C_ARR_LEN(u)));
 
     return 1;
 }
@@ -365,7 +401,7 @@ i32 bary_v_test(void) {
     float expected_bary[C_ARR_LEN(u)] = {3, 3};
 
     float bary[C_ARR_LEN(u)];
-    float *out = bary_v(u, v, w, a, b, g, bary, C_ARR_LEN(u));
+    const float *out = bary_v(u, v, w, a, b, g, bary, C_ARR_LEN(u));
     ASSERTZ(out != NULL);
     ASSERTZ(eq_v(bary, expected_bary, C_ARR_LEN(u)));
 

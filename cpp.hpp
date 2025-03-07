@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+
 #include <type_traits>
 
 extern "C" {
@@ -101,6 +102,12 @@ static_assert(sizeof(Mat<2, i32>) == (2 * 2 * sizeof(i32)));
 #pragma region function
 
 template <typename T>
+T min(const T &x, const T &y);
+
+template <typename T>
+T max(const T &x, const T &y);
+
+template <typename T>
 i32 eq(const T &x, const T &y);
 
 template <typename T>
@@ -119,6 +126,10 @@ template <typename T>
 [[nodiscard]] T *sub_v(const T *u, const T *v, T *out, i32 len);
 
 template <typename T>
+[[nodiscard]] float *mix_v(                              //
+    const T *u, const T *v, float t, float *out, i32 len //
+);
+
 template <typename T>
 [[nodiscard]] float *bary_v(            //
     const T *u, const T *v, const T *w, //
@@ -195,7 +206,7 @@ Arr<N, float> Arr<N, T>::norm() const {
     TESTED();
 
     Arr<N, float> norm;
-    float *out = norm_v(ptr, norm.ptr, N);
+    const float *out = norm_v(ptr, norm.ptr, N);
     if (out != NULL) {
         return norm;
     } else {
@@ -231,7 +242,7 @@ Arr<N, float> Arr<N, T>::bary(                //
     TESTED();
 
     Arr<N, float> bary;
-    float *out = bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
+    const float *out = bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
     if (out != NULL) {
         return bary;
     } else {
@@ -244,12 +255,10 @@ Arr<N, T> Arr<N, T>::operator-(const Arr &rhs) const {
     TESTED();
 
     Arr sub;
-    T *out = sub_v(ptr, rhs.ptr, sub.ptr, N);
-    if (out != NULL) {
-        return sub;
-    } else {
-        return Arr::zeros();
-    }
+    const T *out = sub_v(ptr, rhs.ptr, sub.ptr, N);
+    MUST(out != NULL);
+
+    return sub;
 }
 
 template <i32 N, typename T>
@@ -357,6 +366,17 @@ bool Mat<N, T>::operator==(const Mat &rhs) const {
     return eq_v(ptr, rhs.ptr, N);
 }
 
+template <typename T>
+T min(const T &x, const T &y) {
+    TESTED();
+    return (x < y) ? x : y;
+}
+
+template <typename T>
+T max(const T &x, const T &y) {
+    TESTED();
+    return (x > y) ? x : y;
+}
 
 template <typename T>
 i32 eq(const T &x, const T &y) {
@@ -445,6 +465,22 @@ T *sub_v(const T *u, const T *v, T *out, i32 len) {
 }
 
 template <typename T>
+float *mix_v(const T *u, const T *v, float t, float *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(u, len);
+    C_ARR_ASSERT(v, len);
+    ASSERTZ(t >= 0);
+    ASSERTZ(t <= 1);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = (1.0f - t) * u[i] + t * v[i];
+    }
+
+    return out;
+}
+
+template <typename T>
 float *bary_v(                          //
     const T *u, const T *v, const T *w, //
     float a, float b, float g,          //
@@ -454,8 +490,8 @@ float *bary_v(                          //
     C_ARR_ASSERT(u, len);
     C_ARR_ASSERT(v, len);
     C_ARR_ASSERT(w, len);
-    C_ARR_ASSERT(out, len);
     ASSERTZ(eq(a + b + g, 1.0f));
+    C_ARR_ASSERT(out, len);
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = a * u[i] + b * v[i] + g * w[i];
