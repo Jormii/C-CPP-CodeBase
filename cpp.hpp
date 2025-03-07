@@ -44,6 +44,7 @@ struct Arr {
 
     T ptr[N];
 
+    i32 len() const;
     T *get(i32 idx);
     const T *get(i32 idx) const;
 
@@ -114,6 +115,9 @@ template <typename T>
 float mag_v(const T *u, i32 len);
 
 template <typename T>
+[[nodiscard]] T *fill_v(const T &x, T *out, i32 len);
+
+template <typename T>
 [[nodiscard]] float *norm_v(const T *u, float *out, i32 len);
 
 template <typename T>
@@ -136,6 +140,12 @@ template <typename T>
     float a, float b, float g,          //
     float *out, i32 len                 //
 );
+
+template <typename T>
+[[nodiscard]] T *I_m(T *out, i32 len);
+
+template <typename T>
+[[nodiscard]] T *fill_m(const T &x, T *out, i32 len);
 
 template <typename T>
 [[nodiscard]] T *trans_m(const T *m, T *out, i32 len);
@@ -180,6 +190,12 @@ const T *Buf<T>::get(i32 idx) const {
 }
 
 template <i32 N, typename T>
+i32 Arr<N, T>::len() const {
+    TESTED();
+    return N;
+}
+
+template <i32 N, typename T>
 T *Arr<N, T>::get(i32 idx) {
     TESTED();
     C_ARR_IDX_ASSERT(ptr, N, idx);
@@ -214,6 +230,26 @@ Arr<N, float> Arr<N, T>::norm() const {
     }
 }
 
+template <i32 N, typename T>
+Arr<N, T> Arr<N, T>::ones() {
+    TESTED();
+
+    Arr arr;
+    const T *out = fill_v((T)1, arr.ptr, N);
+    MUST(out != NULL);
+
+    return arr;
+}
+
+template <i32 N, typename T>
+Arr<N, T> Arr<N, T>::zeros() {
+    TESTED();
+
+    Arr arr;
+    const T *out = fill_v((T)0, arr.ptr, N);
+    MUST(out != NULL);
+
+    return arr;
 }
 
 template <i32 N, typename T>
@@ -306,10 +342,9 @@ template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::I() {
     TESTED();
 
-    Mat m = Mat::zeros();
-    for (i32 i = 0; i < N; ++i) {
-        m.ptr[i * N + i] = 1;
-    }
+    Mat m;
+    const T *out = I_m(m.ptr, N);
+    MUST(out != NULL);
 
     return m;
 }
@@ -319,9 +354,8 @@ Mat<N, T> Mat<N, T>::ones() {
     TESTED();
 
     Mat m;
-    for (i32 i = 0; i < N * N; ++i) {
-        m.ptr[i] = 1;
-    }
+    const T *out = fill_m((T)1, m.ptr, N);
+    MUST(out != NULL);
 
     return m;
 }
@@ -331,9 +365,8 @@ Mat<N, T> Mat<N, T>::zeros() {
     TESTED();
 
     Mat m;
-    for (i32 i = 0; i < N * N; ++i) {
-        m.ptr[i] = 0;
-    }
+    const T *out = fill_m((T)0, m.ptr, N);
+    MUST(out != NULL);
 
     return m;
 }
@@ -404,6 +437,18 @@ float mag_v(const T *u, i32 len) {
     float mag = sqrtf((float)dot);
 
     return mag;
+}
+
+template <typename T>
+T *fill_v(const T &x, T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = x;
+    }
+
+    return out;
 }
 
 template <typename T>
@@ -498,6 +543,26 @@ float *bary_v(                          //
     }
 
     return out;
+}
+
+template <typename T>
+T *I_m(T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0, idx = 0; i < len; ++i) {
+        for (i32 j = 0; j < len; ++j, ++idx) {
+            out[idx] = (T)(i == j);
+        }
+    }
+
+    return out;
+}
+
+template <typename T>
+T *fill_m(const T &x, T *out, i32 len) {
+    TESTED();
+    return fill_v(x, out, len * len);
 }
 
 template <typename T>

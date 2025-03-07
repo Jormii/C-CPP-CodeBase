@@ -33,17 +33,25 @@ i32 Buf_get_test(void) {
 }
 
 // cpp.hpp::Arr
-i32 Arr_get_test(void) {
-    Arr<3, i32> arr = {1, 2, 3};
-    const Arr<3, i32> arr_const = {1, 2, 3};
-    ASSERTZ(C_ARR_LEN(arr.ptr) == C_ARR_LEN(arr_const.ptr));
+i32 Arr_len_test(void) {
+    Arr<3, i32> arr;
+    ASSERTZ(arr.len() == 3);
 
-    i32 len = C_ARR_LEN(arr.ptr);
+    return 1;
+}
+
+i32 Arr_get_test(void) {
+    Arr<3, i32> arr = {0, 1, 2};
+    const Arr<3, i32> arr_const = {0, 1, 2};
+    ASSERTZ(arr.len() == arr_const.len());
+
+    i32 len = arr.len();
     for (i32 i = 0; i < len; ++i) {
         i32 *p = arr.get(i);
         const i32 *pc = arr.get(i);
         const i32 *pc_const = arr_const.get(i);
 
+        ASSERTZ(*p == i);
         ASSERTZ(p == (arr.ptr + i));
         ASSERTZ(pc == (arr.ptr + i));
         ASSERTZ(pc_const == (arr_const.ptr + i));
@@ -69,6 +77,24 @@ i32 Arr_norm_test(void) {
 
     Arr norm = u.norm();
     ASSERTZ(norm == expected_norm);
+
+    return 1;
+}
+
+i32 Arr_ones_test(void) {
+    V2i expected_ones = {1, 1};
+
+    V2i ones = V2i::ones();
+    ASSERTZ(ones == expected_ones);
+
+    return 1;
+}
+
+i32 Arr_zeros_test(void) {
+    V2i expeceted_zeros = {0, 0};
+
+    V2i zeros = V2i::zeros();
+    ASSERTZ(zeros == expeceted_zeros);
 
     return 1;
 }
@@ -327,6 +353,18 @@ i32 mag_v_test(void) {
     return 1;
 }
 
+i32 fill_v_test(void) {
+    i32 x = 2;
+    i32 expected_fill[] = {x, x};
+
+    i32 fill[C_ARR_LEN(expected_fill)];
+    const i32 *out = fill_v(x, fill, C_ARR_LEN(expected_fill));
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(fill, expected_fill, C_ARR_LEN(expected_fill)));
+
+    return 1;
+}
+
 i32 norm_v_test(void) {
     i32 u[] = {3, 4};
     float mag = mag_v(u, C_ARR_LEN(u));
@@ -408,6 +446,35 @@ i32 bary_v_test(void) {
     return 1;
 }
 
+i32 I_m_test(void) {
+    i32 expected_I[] = {
+        1, 0, //
+        0, 1, //
+    };
+
+    i32 I[C_ARR_LEN(expected_I)];
+    const i32 *out = I_m(I, C_ARR_LEN(expected_I) >> 1);
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(I, expected_I, C_ARR_LEN(expected_I)));
+
+    return 1;
+}
+
+i32 fill_m_test(void) {
+    i32 x = 2;
+    i32 expected_fill[] = {
+        x, x, //
+        x, x, //
+    };
+
+    i32 fill[C_ARR_LEN(expected_fill)];
+    const i32 *out = fill_m(x, fill, C_ARR_LEN(expected_fill) >> 1);
+    ASSERTZ(out != NULL);
+    ASSERTZ(eq_v(fill, expected_fill, C_ARR_LEN(expected_fill)));
+
+    return 1;
+}
+
 i32 trans_m_test(void) {
     i32 m[] = {
         0, 1, //
@@ -459,7 +526,7 @@ i32 mmult_m_test(void) {
     i32 mmult[C_ARR_LEN(m)];
     const i32 *out = mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1);
     ASSERTZ(out != NULL);
-    ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m) >> 1));
+    ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
 
     return 1;
 }
