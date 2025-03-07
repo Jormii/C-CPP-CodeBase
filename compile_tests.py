@@ -49,7 +49,8 @@ def get_signatures(files: List[str]) -> Dict[str, List[str]]:
     ERROR_ESC = f"{BOLD_ESC}\033[91m"
     WARNING_ESC = f"{BOLD_ESC}\033[93m"
 
-    REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*_test)\((?:void)?\)"
+    TYPO_REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*)\((?:void)?\)"
+    REGEX =      r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*_test)\((?:void)?\)"
 
     defined_in: Dict[str, str] = {}
     collisions: Dict[str, List[str]] = {}
@@ -63,7 +64,11 @@ def get_signatures(files: List[str]) -> Dict[str, List[str]]:
         for line in map(lambda ln: ln.strip(), lines):
             search = re.search(REGEX, line)
             if search is None:
-                continue
+                search = re.search(TYPO_REGEX, line)
+                if search is None:
+                    continue
+                else:
+                    print(f"{WARNING_ESC}!{END_ESC} {file}: {line}")
 
             signature = search.group(1)
             signatures[file].append(signature)
