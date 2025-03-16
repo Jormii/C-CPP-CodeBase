@@ -171,6 +171,9 @@ T max(const T &x, const T &y);
 template <typename T>
 i32 eq(const T &x, const T &y);
 
+template <typename T, typename V>
+float map_range(const T &x, const T &a, const T &b, const V &u, const V &v);
+
 template <typename T>
 float mag_v(const T *u, i32 len);
 
@@ -636,6 +639,21 @@ i32 eq<float>(const float &x, const float &y) {
     i32 nearly_eq = abs <= __FLT_EPSILON__;
 
     return nearly_eq;
+}
+
+template <typename T, typename V>
+float map_range(const T &x, const T &a, const T &b, const V &u, const V &v) {
+    TESTED();
+    ASSERTZ(x >= min(a, b));
+    ASSERTZ(x <= max(a, b));
+    ASSERTZ(!eq(a, b));
+    ASSERTZ(!eq(u, v));
+
+    float num = x - a;
+    float den = b - a;
+    float map = num / den * (v - u) + u;
+
+    return map;
 }
 
 template <typename T>

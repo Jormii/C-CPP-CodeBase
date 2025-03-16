@@ -446,6 +446,20 @@ i32 eq__float_test(void) {
     return 1;
 }
 
+i32 map_range_test(void) {
+    float x = 0.5f;
+    float a = 0.0f;
+    float b = 1.0f;
+    float u = -2.0f;
+    float v = 8.0f;
+    float expected_map = 3.0f;
+
+    float map = map_range(x, a, b, u, v);
+    ASSERTZ(eq(map, expected_map));
+
+    return 1;
+}
+
 i32 mag_v_test(void) {
     i32 u[] = {3, 4};
     float expected_mag = 5.0f;
