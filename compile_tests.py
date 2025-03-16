@@ -111,8 +111,8 @@ def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
     for file_signatures in signatures.values():
         n_tests += len(file_signatures)
 
-    file = os.path.join(save_dir, FILENAME)
-    with open(file, "w") as fd:
+    tests_file = os.path.join(save_dir, FILENAME)
+    with open(tests_file, "w") as fd:
         fd.write("#include <stdint.h>\n")
 
         fd.write("\ntypedef int32_t i32;\n")
@@ -151,7 +151,7 @@ def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
         fd.write("\n\treturn (passed == N_TESTS) ? 0 : 1;\n")
         fd.write("}\n")
 
-    return file
+    return tests_file
 
 
 if __name__ == "__main__":
