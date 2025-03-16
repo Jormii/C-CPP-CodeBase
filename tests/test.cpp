@@ -470,6 +470,18 @@ i32 mag_v_test(void) {
     return 1;
 }
 
+i32 cast_v_test(void) {
+    float u[] = {3, 4, 5, 6};
+    i32 expected_cast[C_ARR_LEN(u)] = {3, 4, 5, 6};
+
+    i32 cast[C_ARR_LEN(u)];
+    const i32 *out = cast_v(u, cast, C_ARR_LEN(u));
+    ASSERTZ(out == cast);
+    ASSERTZ(eq_v(cast, expected_cast, C_ARR_LEN(u)));
+
+    return 1;
+}
+
 i32 fill_v_test(void) {
     i32 x = 2;
     i32 expected_fill[] = {x, x};

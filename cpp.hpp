@@ -177,6 +177,9 @@ float map_range(const T &x, const T &a, const T &b, const V &u, const V &v);
 template <typename T>
 float mag_v(const T *u, i32 len);
 
+template <typename T, typename V>
+[[nodiscard]] V *cast_v(const T *u, V *out, i32 len);
+
 template <typename T>
 [[nodiscard]] T *fill_v(const T &x, T *out, i32 len);
 
@@ -665,6 +668,19 @@ float mag_v(const T *u, i32 len) {
     float mag = sqrtf((float)dot);
 
     return mag;
+}
+
+template <typename T, typename V>
+V *cast_v(const T *u, V *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(u, len);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = (V)u[i];
+    }
+
+    return out;
 }
 
 template <typename T>
