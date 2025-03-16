@@ -92,8 +92,24 @@ using V2i = Arr<2, i32>;
 using V2f = Arr<2, float>;
 using V3i = Arr<3, i32>;
 using V3f = Arr<3, float>;
+using V4i = Arr<4, i32>;
+using V4f = Arr<4, float>;
 
 static_assert(sizeof(Arr<2, i32>) == (2 * sizeof(i32)));
+
+template <typename T>
+using V2 = Arr<2, T>;
+
+template <typename T>
+using V3 = Arr<3, T>;
+
+template <typename T>
+using V4 = Arr<4, T>;
+
+static_assert(sizeof(V2<i32>) == (2 * sizeof(i32)));
+static_assert(sizeof(V3<i32>) == (3 * sizeof(i32)));
+static_assert(sizeof(V4<i32>) == (4 * sizeof(i32)));
+
 
 template <i32 N, typename T>
 struct Mat {
@@ -119,8 +135,26 @@ struct Mat {
 };
 
 using M2i = Mat<2, i32>;
+using M2f = Mat<2, float>;
+using M3i = Mat<3, i32>;
+using M3f = Mat<3, float>;
+using M4i = Mat<4, i32>;
+using M4f = Mat<4, float>;
 
 static_assert(sizeof(Mat<2, i32>) == (2 * 2 * sizeof(i32)));
+
+template <typename T>
+using M2 = Mat<2, T>;
+
+template <typename T>
+using M3 = Mat<3, T>;
+
+template <typename T>
+using M4 = Mat<4, T>;
+
+static_assert(sizeof(M2<i32>) == (2 * 2 * sizeof(i32)));
+static_assert(sizeof(M3<i32>) == (3 * 3 * sizeof(i32)));
+static_assert(sizeof(M4<i32>) == (4 * 4 * sizeof(i32)));
 
 #pragma endregion
 
