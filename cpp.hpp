@@ -214,15 +214,17 @@ template <typename T>
 );
 
 template <typename T>
-[[nodiscard]] T *I_m(T *out, i32 len);
+[[nodiscard]] T *I_m(T *out, i32 n);
 
 template <typename T>
-[[nodiscard]] T *fill_m(const T &x, T *out, i32 len);
+[[nodiscard]] T *fill_m(const T &x, T *out, i32 n);
 
 template <typename T>
-[[nodiscard]] T *trans_m(const T *m, T *out, i32 len);
+[[nodiscard]] T *trans_m(const T *m, T *out, i32 n);
 
 template <typename T>
+[[nodiscard]] T *vmult_m(const T *m, const T *u, T *out, i32 n);
+
 template <i32 N, typename T>
 [[nodiscard]] T *mmult_m(const T *m, const T *a, T *out);
 
@@ -824,12 +826,12 @@ float *bary_v(                          //
 }
 
 template <typename T>
-T *I_m(T *out, i32 len) {
+T *I_m(T *out, i32 n) {
     TESTED();
-    C_ARR_ASSERT(out, len);
+    C_ARR_ASSERT(out, n);
 
-    for (i32 i = 0, idx = 0; i < len; ++i) {
-        for (i32 j = 0; j < len; ++j, ++idx) {
+    for (i32 i = 0, idx = 0; i < n; ++i) {
+        for (i32 j = 0; j < n; ++j, ++idx) {
             out[idx] = (T)(i == j);
         }
     }
@@ -838,20 +840,20 @@ T *I_m(T *out, i32 len) {
 }
 
 template <typename T>
-T *fill_m(const T &x, T *out, i32 len) {
+T *fill_m(const T &x, T *out, i32 n) {
     TESTED();
-    return fill_v(x, out, len * len);
+    return fill_v(x, out, n * n);
 }
 
 template <typename T>
-T *trans_m(const T *m, T *out, i32 len) {
+T *trans_m(const T *m, T *out, i32 n) {
     TESTED();
-    C_ARR_ASSERT(m, len);
-    C_ARR_ASSERT(out, len);
+    C_ARR_ASSERT(m, n);
+    C_ARR_ASSERT(out, n);
 
-    for (i32 i = 0; i < len; ++i) {
-        for (i32 j = 0; j < len; ++j) {
-            out[j * len + i] = m[i * len + j];
+    for (i32 i = 0; i < n; ++i) {
+        for (i32 j = 0; j < n; ++j) {
+            out[j * n + i] = m[i * n + j];
         }
     }
 
@@ -859,14 +861,14 @@ T *trans_m(const T *m, T *out, i32 len) {
 }
 
 template <typename T>
-T *vmult_m(const T *m, const T *u, T *out, i32 len) {
+T *vmult_m(const T *m, const T *u, T *out, i32 n) {
     TESTED();
-    C_ARR_ASSERT(m, len);
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(out, len);
+    C_ARR_ASSERT(m, n);
+    C_ARR_ASSERT(u, n);
+    C_ARR_ASSERT(out, n);
 
-    for (i32 i = 0; i < len; ++i) {
-        out[i] = dot_v(m + i * len, u, len);
+    for (i32 i = 0; i < n; ++i) {
+        out[i] = dot_v(m + i * n, u, n);
     }
 
     return out;
