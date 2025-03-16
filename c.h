@@ -16,18 +16,21 @@ typedef int64_t i64;
 #define UNTESTED(MSG) MUST(0 && MSG)
 
 #ifdef NDEBUG
-#define MUST(EXPR)    // Assert. Exits if EXPR is false
-#define ASSERTZ(EXPR) // Assert. Returns 0 if EXPR is false
+#define MUST(EXPR)              // Assert. Exits if EXPR is false
+#define ASSERTZ(EXPR)           // Assert. Returns 0 if EXPR is false
+#define ASSERTC(EXPR, err_code) // Assert. Returns err_code if EXPR is false
 #else
 #define MUST(EXPR)                                                             \
     if (!(EXPR)) {                                                             \
         must_cb(#EXPR, __FILE__, __LINE__);                                    \
     }
 
-#define ASSERTZ(EXPR)                                                          \
+#define ASSERTZ(EXPR) ASSERTC(EXPR, 0)
+
+#define ASSERTC(EXPR, err_code)                                                \
     if (!(EXPR)) {                                                             \
-        assertz_cb(#EXPR, __FILE__, __LINE__);                                 \
-        return 0;                                                              \
+        assert_cb(#EXPR, __FILE__, __LINE__);                                  \
+        return err_code;                                                       \
     }
 #endif
 
@@ -35,8 +38,8 @@ typedef int64_t i64;
 // This callback must take care of exiting the program
 extern void must_cb(const char *expr, const char *file, i32 line);
 
-// Called when ASSERTZ() evaluates EXPR to false
-extern void assertz_cb(const char *expr, const char *file, i32 line);
+// Called when ASSERTZ() or ASSERTC() evaluate EXPR to false
+extern void assert_cb(const char *expr, const char *file, i32 line);
 
 #define C_ARR_LEN(c_arr)                                                       \
     TESTED()                                                                   \

@@ -23,8 +23,8 @@ void must_cb(const char *expr, const char *file, i32 line) {
 }
 
 // See c.h::ASSERTZ
-void assertz_cb(const char *expr, const char *file, i32 line) {
-    fprintf(stderr, "Failed ASSERTZ %s:%d: %s\n", file, line, expr);
+void assert_cb(const char *expr, const char *file, i32 line) {
+    fprintf(stderr, "Failed ASSERT %s:%d: %s\n", file, line, expr);
 }
 
 // See compile_tests.py
