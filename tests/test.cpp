@@ -509,6 +509,19 @@ i32 sub_v_test(void) {
     return 1;
 }
 
+i32 div_vs_test(void) {
+    i32 u[] = {2, -3};
+    i32 scalar = 2;
+    float expected_div[C_ARR_LEN(u)] = {1, -1.5f};
+
+    float div[C_ARR_LEN(u)];
+    const float *out = div_vs(u, scalar, div, C_ARR_LEN(u));
+    ASSERTZ(out == div);
+    ASSERTZ(eq_v(div, expected_div, C_ARR_LEN(u)));
+
+    return 1;
+}
+
 i32 mix_v_test(void) {
     i32 u[] = {2, 3};
     i32 v[C_ARR_LEN(u)] = {8, 17};

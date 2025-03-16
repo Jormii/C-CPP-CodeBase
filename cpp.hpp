@@ -191,6 +191,9 @@ template <typename T>
 [[nodiscard]] T *sub_v(const T *u, const T *v, T *out, i32 len);
 
 template <typename T>
+[[nodiscard]] float *div_vs(const T *u, const T &s, float *out, i32 len);
+
+template <typename T>
 [[nodiscard]] float *mix_v(                              //
     const T *u, const T *v, float t, float *out, i32 len //
 );
@@ -698,6 +701,20 @@ T *sub_v(const T *u, const T *v, T *out, i32 len) {
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = u[i] - v[i];
+    }
+
+    return out;
+}
+
+template <typename T>
+float *div_vs(const T *u, const T &s, float *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(u, len);
+    ASSERTZ(!eq(s, 0));
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = (float)(u[i]) / (float)s;
     }
 
     return out;
