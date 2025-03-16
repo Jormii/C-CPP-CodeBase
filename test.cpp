@@ -13,7 +13,7 @@ extern void testing_finished_cb(i32 passed, i32 failed);
 }
 #endif
 
-// From ./tests/test.c
+// From ./tests/c.c
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,7 +28,7 @@ extern i32 C_ARR_IDX_ASSERT_overflow_test(void);
 }
 #endif
 
-// From ./tests/test.cpp
+// From ./tests/cpp.cpp
 extern i32 SWAP_test(void);
 extern i32 Buf_get_test(void);
 extern i32 Arr_len_test(void);
@@ -90,7 +90,7 @@ int main(void) {
 
 	testing_started_cb();
 
-	test_file_cb("./tests/test.c");
+	test_file_cb("./tests/c.c");
 	passed += test_function_cb(C_ARR_LEN_test, "C_ARR_LEN_test");
 	passed += test_function_cb(C_ARR_LEN_NULL_test, "C_ARR_LEN_NULL_test");
 	passed += test_function_cb(C_ARR_LEN_arg_ptr_test, "C_ARR_LEN_arg_ptr_test");
@@ -99,7 +99,7 @@ int main(void) {
 	passed += test_function_cb(C_ARR_IDX_ASSERT_underflow_test, "C_ARR_IDX_ASSERT_underflow_test");
 	passed += test_function_cb(C_ARR_IDX_ASSERT_overflow_test, "C_ARR_IDX_ASSERT_overflow_test");
 
-	test_file_cb("./tests/test.cpp");
+	test_file_cb("./tests/cpp.cpp");
 	passed += test_function_cb(SWAP_test, "SWAP_test");
 	passed += test_function_cb(Buf_get_test, "Buf_get_test");
 	passed += test_function_cb(Arr_len_test, "Arr_len_test");
