@@ -447,6 +447,18 @@ i32 fill_v_test(void) {
     return 1;
 }
 
+i32 neg_v_test(void) {
+    i32 u[] = {2, -3};
+    i32 expected_neg[C_ARR_LEN(u)] = {-2, 3};
+
+    i32 neg[C_ARR_LEN(u)];
+    const i32 *out = neg_v(u, neg, C_ARR_LEN(u));
+    ASSERTZ(out == neg);
+    ASSERTZ(eq_v(neg, expected_neg, C_ARR_LEN(u)));
+
+    return 1;
+}
+
 i32 norm_v_test(void) {
     i32 u[] = {3, 4};
     float mag = mag_v(u, C_ARR_LEN(u));

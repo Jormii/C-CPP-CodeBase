@@ -176,6 +176,9 @@ template <typename T>
 [[nodiscard]] T *fill_v(const T &x, T *out, i32 len);
 
 template <typename T>
+[[nodiscard]] T *neg_v(const T *u, T *out, i32 len);
+
+template <typename T>
 [[nodiscard]] float *norm_v(const T *u, float *out, i32 len);
 
 template <typename T>
@@ -624,6 +627,19 @@ T *fill_v(const T &x, T *out, i32 len) {
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = x;
+    }
+
+    return out;
+}
+
+template <typename T>
+T *neg_v(const T *u, T *out, i32 len) {
+    TESTED();
+    C_ARR_ASSERT(u, len);
+    C_ARR_ASSERT(out, len);
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = -u[i];
     }
 
     return out;
