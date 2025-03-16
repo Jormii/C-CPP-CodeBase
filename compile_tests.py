@@ -1,8 +1,8 @@
 import os
 import re
+import sys
 from typing import Dict, List
 
-DIR = "./tests"
 
 # About C/C++ testing:
 #   - The programs looks for *.c and *.cpp files inside {DIR} directory above
@@ -17,13 +17,45 @@ DIR = "./tests"
 #       - void testing_finished_cb(i32 passed, i32 failed)
 
 
-def main() -> None:
-    files = get_source_files(DIR)
-    signatures = get_signatures(files)
+END_ESC = "\033[0m"
+BOLD_ESC = "\033[1m"
+ERROR_ESC = f"{BOLD_ESC}\033[91m"
+WARNING_ESC = f"{BOLD_ESC}\033[93m"
+
+
+def main() -> int:
+    argv = sys.argv
+    if len(argv) < 2:
+        print(f'usage: {os.path.basename(__file__)} <dirs...>')
+        return 1
+
+    all_exist = True
+    dirs: List[str] = []
+    for i in range(1, len(argv)):
+        dir = argv[i]
+        assert isinstance(dir, str)
+
+        if dir not in dirs:
+            dirs.append(dir)
+        
+        if not os.path.isdir(dir):
+            all_exist = False
+            print(f"{WARNING_ESC}!{END_ESC} {dir}: Does not exist")
+
+    if not all_exist:
+        return 1
+
+    signatures: Dict[str, List[str]] = {}
+    for dir in dirs:
+        files = get_source_files(dir)
+        file_signatures = get_signatures(files)
+
+        signatures.update(file_signatures)
+
     compiled_file = generate_file(signatures, os.getcwd())
-
     print(f"\nTests main saved to {compiled_file}")
-
+    
+    return 0
 
 def get_source_files(dir: str) -> List[str]:
     dirs = [dir]
@@ -44,11 +76,6 @@ def get_source_files(dir: str) -> List[str]:
 
 
 def get_signatures(files: List[str]) -> Dict[str, List[str]]:
-    END_ESC = "\033[0m"
-    BOLD_ESC = "\033[1m"
-    ERROR_ESC = f"{BOLD_ESC}\033[91m"
-    WARNING_ESC = f"{BOLD_ESC}\033[93m"
-
     TYPO_REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*)\((?:void)?\)"
     REGEX =      r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*_test)\((?:void)?\)"
 
@@ -155,4 +182,4 @@ def generate_file(signatures: Dict[str, List[str]], save_dir: str) -> str:
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

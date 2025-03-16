@@ -1,4 +1,4 @@
-python ./compile_tests.py
+python ./compile_tests.py ./tests
 if [ $? -eq 0 ]; then
     FLAGS="-I . -Wall -Wpedantic -Wextra"
     CPP_FLAGS="$FLAGS -std=gnu++2b"
