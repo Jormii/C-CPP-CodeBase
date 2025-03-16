@@ -77,6 +77,7 @@ struct Arr {
     static T dot(const Arr &u, const Arr &v);
     static Arr cross(const Arr &u, const Arr &v);
 
+    static Arr<N, float> mix(const Arr &u, const Arr &v, float t);
     static Arr<N, float> bary(                    //
         const Arr &u, const Arr &v, const Arr &w, //
         float a, float b, float g                 //
@@ -385,6 +386,19 @@ Arr<N, T> Arr<N, T>::cross(const Arr &u, const Arr &v) {
         u.ptr[2] * v.ptr[0] - u.ptr[0] * v.ptr[2],
         u.ptr[0] * v.ptr[1] - u.ptr[1] * v.ptr[0],
     };
+}
+
+template <i32 N, typename T>
+Arr<N, float> Arr<N, T>::mix(const Arr &u, const Arr &v, float t) {
+    TESTED();
+
+    Arr<N, float> mix;
+    const float *out = mix_v(u.ptr, v.ptr, t, mix.ptr, N);
+    if (out != NULL) {
+        return mix;
+    } else {
+        return Arr<N, float>::zeros();
+    }
 }
 
 template <i32 N, typename T>

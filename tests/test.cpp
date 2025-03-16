@@ -191,6 +191,18 @@ i32 Arr_cross_test(void) {
     return 1;
 }
 
+i32 Arr_mix_test(void) {
+    V2i u = {2, 3};
+    V2i v = {8, 17};
+    float t = 0.5f;
+    V2f expected_mix = {5, 10};
+
+    V2f mix = V2i::mix(u, v, t);
+    ASSERTZ(mix == expected_mix);
+
+    return 1;
+}
+
 i32 Arr_bary_test(void) {
     V2i u = {3, 2};
     V2i v = {5, 3};
