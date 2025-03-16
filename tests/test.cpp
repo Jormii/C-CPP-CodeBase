@@ -677,10 +677,106 @@ i32 mmult_m_test(void) {
         64, 73, //
     };
 
-    i32 mmult[C_ARR_LEN(m)];
-    const i32 *out = mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1);
-    ASSERTZ(out == mmult);
-    ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+    {
+        i32 mmult[C_ARR_LEN(m)];
+        const i32 *out = mmult_m<2, i32>(m, n, mmult);
+        ASSERTZ(out == mmult);
+        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+    }
+    {
+        i32 mmult[C_ARR_LEN(m)];
+        const i32 *out = mmult_m<2, i32>(m, n, mmult, 1);
+        ASSERTZ(out == mmult);
+        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+    }
+    {
+        i32 mmult[C_ARR_LEN(m)];
+        const i32 *out = mmult_m<i32>(m, n, mmult, C_ARR_LEN(m) >> 1, 1);
+        ASSERTZ(out == mmult);
+        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+    }
+    {
+        i32 mmult[C_ARR_LEN(m)];
+        const i32 *out = __mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1, 1);
+        ASSERTZ(out == mmult);
+        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+    }
 
     return 1;
+}
+
+i32 mmult_m_many_test(void) {
+#define N 2
+#define CNT 3
+
+    i32 m[CNT][N * N] = {
+        {
+            2, 3, //
+            4, 5, //
+        },
+        {
+            6, 7, //
+            8, 9, //
+        },
+        {
+            6, 7, //
+            8, 9, //
+        },
+    };
+    i32 n[CNT][N * N] = {
+        {
+            6, 7, //
+            8, 9, //
+        },
+        {
+            10, 11, //
+            12, 13, //
+        },
+        {
+            10, 11, //
+            12, 13, //
+        },
+    };
+    i32 expected_mmult[CNT][N * N] = {
+        {
+            36, 41, //
+            64, 73, //
+        },
+        {
+            144, 157, //
+            188, 205, //
+        },
+        {
+            144, 157, //
+            188, 205, //
+        },
+    };
+
+    i32 *m_ptr = (i32 *)m;
+    i32 *n_ptr = (i32 *)n;
+    i32 *expected_ptr = (i32 *)expected_mmult;
+
+    {
+        i32 mmult[CNT][N * N];
+        const i32 *out = mmult_m<N, i32>(m_ptr, n_ptr, (i32 *)mmult, CNT);
+        ASSERTZ(out == (i32 *)mmult);
+        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+    }
+    {
+        i32 mmult[CNT][N * N];
+        const i32 *out = mmult_m<i32>(m_ptr, n_ptr, (i32 *)mmult, N, CNT);
+        ASSERTZ(out == (i32 *)mmult);
+        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+    }
+    {
+        i32 mmult[CNT][N * N];
+        const i32 *out = __mmult_m(m_ptr, n_ptr, (i32 *)mmult, N, CNT);
+        ASSERTZ(out == (i32 *)mmult);
+        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+    }
+
+    return 1;
+
+#undef N
+#undef CNT
 }

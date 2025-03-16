@@ -223,10 +223,17 @@ template <typename T>
 [[nodiscard]] T *trans_m(const T *m, T *out, i32 len);
 
 template <typename T>
-[[nodiscard]] T *vmult_m(const T *m, const T *u, T *out, i32 len);
+template <i32 N, typename T>
+[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out);
+
+template <i32 N, typename T>
+[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out, i32 cnt);
 
 template <typename T>
-[[nodiscard]] T *mmult_m(const T *m, const T *n, T *out, i32 len);
+[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
+
+template <typename T>
+[[nodiscard]] T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
 
 #pragma endregion
 
@@ -603,7 +610,7 @@ Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
     TESTED();
 
     Mat mmult;
-    const T *out = mmult_m(ptr, rhs.ptr, mmult.ptr, N);
+    const T *out = mmult_m<N, T>(ptr, rhs.ptr, mmult.ptr);
     MUST(out != NULL);
 
     return mmult;
@@ -865,21 +872,46 @@ T *vmult_m(const T *m, const T *u, T *out, i32 len) {
     return out;
 }
 
-template <typename T>
-T *mmult_m(const T *m, const T *n, T *out, i32 len) {
+template <i32 N, typename T>
+inline T *mmult_m(const T *m, const T *a, T *out) {
     TESTED();
-    C_ARR_ASSERT(m, len);
-    C_ARR_ASSERT(n, len);
-    C_ARR_ASSERT(out, len);
+    return __mmult_m(m, a, out, N, 1);
+}
 
-    for (i32 i = 0, idx = 0; i < len; ++i) {
-        for (i32 j = 0; j < len; ++j, ++idx) {
-            T dot = 0;
-            for (i32 dot_idx = 0; dot_idx < len; ++dot_idx) {
-                dot += m[i * len + dot_idx] * n[dot_idx * len + j];
+template <i32 N, typename T>
+T *mmult_m(const T *m, const T *a, T *out, i32 cnt) {
+    TESTED();
+    return __mmult_m(m, a, out, N, cnt);
+}
+
+template <typename T>
+T *mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+    TESTED();
+    return __mmult_m(m, a, out, n, cnt);
+}
+
+template <typename T>
+T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+    TESTED();
+    C_ARR_ASSERT(m, n);
+    C_ARR_ASSERT(a, n);
+    C_ARR_ASSERT(out, n);
+
+    i32 off = n * n;
+
+    T *out_ptr = out;
+    const T *m_ptr = m;
+    const T *a_ptr = a;
+    for (i32 _ = 0; _ < cnt; ++_, m_ptr += off, a_ptr += off) {
+        for (i32 i = 0; i < n; ++i) {
+            for (i32 j = 0; j < n; ++j, ++out_ptr) {
+                T dot = 0;
+                for (i32 dot_idx = 0; dot_idx < n; ++dot_idx) {
+                    dot += m_ptr[i * n + dot_idx] * a_ptr[dot_idx * n + j];
+                }
+
+                *out_ptr = dot;
             }
-
-            out[idx] = dot;
         }
     }
 
