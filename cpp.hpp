@@ -779,7 +779,7 @@ template <typename T>
 float *div_vs(const T *u, const T &s, float *out, i32 len) {
     TESTED();
     C_ARR_ASSERT(u, len);
-    ASSERTZ(!eq(s, 0));
+    ASSERTZ(!eq(s, (T)0));
     C_ARR_ASSERT(out, len);
 
     for (i32 i = 0; i < len; ++i) {
