@@ -557,7 +557,7 @@ void Mat<N, T>::print(const char *name) const {
     for (i32 i = 0; i < N; ++i) {
         printf("\t[ ");
         for (i32 j = 0; j < N; ++j) {
-            printf("%f\t", *get(i, j));
+            printf("%f\t", (float)*get(i, j));
         }
         printf("]\n");
     }
