@@ -66,6 +66,11 @@ struct Arr {
     Arr<2, T> xy() const;
     Arr<3, T> xyz() const;
 
+    template <typename V>
+    Arr<N, V> cast() const;
+
+    void print(const char *name) const;
+
     static Arr ones();
     static Arr zeros();
 
@@ -99,6 +104,8 @@ struct Mat {
     const T *get(i32 row, i32 col) const;
 
     Mat trans() const;
+
+    void print(const char *name) const;
 
     static Mat I();
     static Mat ones();
@@ -318,6 +325,29 @@ Arr<3, T> Arr<N, T>::xyz() const {
 }
 
 template <i32 N, typename T>
+template <typename V>
+Arr<N, V> Arr<N, T>::cast() const {
+    TESTED();
+
+    Arr<N, V> arr;
+    const V *out = cast_v(ptr, arr.ptr, N);
+    MUST(out != NULL);
+
+    return arr;
+}
+
+template <i32 N, typename T>
+void Arr<N, T>::print(const char *name) const {
+    NOTE("LEFT UNTESTED");
+
+    printf("Arr<%ld> %s [", N, name);
+    for (i32 i = 0; i < N; ++i) {
+        printf("%f\t", (float)*get(i));
+    }
+    printf("]\n");
+}
+
+template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::ones() {
     TESTED();
 
@@ -423,6 +453,18 @@ Mat<N, T> Mat<N, T>::trans() const {
     MUST(out != NULL);
 
     return t;
+}
+
+template <i32 N, typename T>
+void Mat<N, T>::print(const char *name) const {
+    printf("M<%ld> %s\n", N, name);
+    for (i32 i = 0; i < N; ++i) {
+        printf("\t[ ");
+        for (i32 j = 0; j < N; ++j) {
+            printf("%f\t", *get(i, j));
+        }
+        printf("]\n");
+    }
 }
 
 template <i32 N, typename T>

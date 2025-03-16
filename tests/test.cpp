@@ -141,6 +141,16 @@ i32 Arr_xyz_test(void) {
     return 1;
 }
 
+i32 Arr_cast_test(void) {
+    V4f u = {3, 4, 5, 6};
+    V4i expected_cast = {3, 4, 5, 6};
+
+    V4i cast = u.cast<i32>();
+    ASSERTZ(cast == expected_cast);
+
+    return 1;
+}
+
 i32 Arr_ones_test(void) {
     V2i expected_ones = {1, 1};
 
