@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include <type_traits>
+#include <utility>
 
 extern "C" {
 #include "c.h"
@@ -53,6 +54,17 @@ struct Arr {
 
     float mag() const;
     Arr<N, float> norm() const;
+
+    T &x();
+    T &y();
+    T &z();
+    T &w();
+    const T &x() const;
+    const T &y() const;
+    const T &z() const;
+    const T &w() const;
+    Arr<2, T> xy() const;
+    Arr<3, T> xyz() const;
 
     static Arr ones();
     static Arr zeros();
@@ -231,6 +243,78 @@ Arr<N, float> Arr<N, T>::norm() const {
     } else {
         return Arr<N, float>::zeros();
     }
+}
+
+template <i32 N, typename T>
+T &Arr<N, T>::x() {
+    TESTED();
+    return CONST_CAST(T &, x);
+}
+
+template <i32 N, typename T>
+const T &Arr<N, T>::x() const {
+    TESTED();
+    static_assert(N >= 1);
+
+    return ptr[0];
+}
+
+template <i32 N, typename T>
+T &Arr<N, T>::y() {
+    TESTED();
+    return CONST_CAST(T &, y);
+}
+
+template <i32 N, typename T>
+const T &Arr<N, T>::y() const {
+    TESTED();
+    static_assert(N >= 2);
+
+    return ptr[1];
+}
+
+template <i32 N, typename T>
+T &Arr<N, T>::z() {
+    TESTED();
+    return CONST_CAST(T &, z);
+}
+
+template <i32 N, typename T>
+const T &Arr<N, T>::z() const {
+    TESTED();
+    static_assert(N >= 3);
+
+    return ptr[2];
+}
+
+template <i32 N, typename T>
+T &Arr<N, T>::w() {
+    TESTED();
+    return CONST_CAST(T &, w);
+}
+
+template <i32 N, typename T>
+const T &Arr<N, T>::w() const {
+    TESTED();
+    static_assert(N >= 4);
+
+    return ptr[3];
+}
+
+template <i32 N, typename T>
+Arr<2, T> Arr<N, T>::xy() const {
+    TESTED();
+    static_assert(N >= 2);
+
+    return Arr<2, T>{x(), y()};
+}
+
+template <i32 N, typename T>
+Arr<3, T> Arr<N, T>::xyz() const {
+    TESTED();
+    static_assert(N >= 3);
+
+    return Arr<3, T>{x(), y(), z()};
 }
 
 template <i32 N, typename T>

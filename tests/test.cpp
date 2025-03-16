@@ -81,6 +81,66 @@ i32 Arr_norm_test(void) {
     return 1;
 }
 
+i32 Arr_x_test(void) {
+    V4i u = {3, 4, 5, 6};
+    const V4i v = {4, 5, 6, 7};
+
+    ASSERTZ(u.x() == 3);
+    ASSERTZ(v.x() == 4);
+
+    return 1;
+}
+
+i32 Arr_y_test(void) {
+    V4i u = {3, 4, 5, 6};
+    const V4i v = {4, 5, 6, 7};
+
+    ASSERTZ(u.y() == 4);
+    ASSERTZ(v.y() == 5);
+
+    return 1;
+}
+
+i32 Arr_z_test(void) {
+    V4i u = {3, 4, 5, 6};
+    const V4i v = {4, 5, 6, 7};
+
+    ASSERTZ(u.z() == 5);
+    ASSERTZ(v.z() == 6);
+
+    return 1;
+}
+
+i32 Arr_w_test(void) {
+    V4i u = {3, 4, 5, 6};
+    const V4i v = {4, 5, 6, 7};
+
+    ASSERTZ(u.w() == 6);
+    ASSERTZ(v.w() == 7);
+
+    return 1;
+}
+
+i32 Arr_xy_test(void) {
+    V4i u = {3, 4, 5, 6};
+    V2i expected_xy = {3, 4};
+
+    V2i xy = u.xy();
+    ASSERTZ(xy == expected_xy);
+
+    return 1;
+}
+
+i32 Arr_xyz_test(void) {
+    V4i u = {3, 4, 5, 6};
+    V3i expected_xyz = {3, 4, 5};
+
+    V3i xyz = u.xyz();
+    ASSERTZ(xyz == expected_xyz);
+
+    return 1;
+}
+
 i32 Arr_ones_test(void) {
     V2i expected_ones = {1, 1};
 
