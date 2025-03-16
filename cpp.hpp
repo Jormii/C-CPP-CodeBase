@@ -21,6 +21,9 @@ extern "C" {
         }                                                                      \
     }
 
+#define CONST_CAST(RET_T, F, ...)                                              \
+    const_cast<RET_T>(std::as_const(*this).F(__VA_ARGS__));
+
 #pragma endregion
 
 #pragma region struct
