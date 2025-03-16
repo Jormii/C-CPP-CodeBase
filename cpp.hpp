@@ -84,6 +84,8 @@ struct Arr {
         float a, float b, float g                 //
     );
 
+    Arr operator-() const;
+    Arr<N, float> operator/(const T &rhs) const;
     Arr operator-(const Arr &rhs) const;
     bool operator==(const Arr &rhs) const;
 };
@@ -453,6 +455,30 @@ Arr<N, float> Arr<N, T>::bary(                //
     const float *out = bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
     if (out != NULL) {
         return bary;
+    } else {
+        return Arr<N, float>::zeros();
+    }
+}
+
+template <i32 N, typename T>
+Arr<N, T> Arr<N, T>::operator-() const {
+    TESTED();
+
+    Arr neg;
+    const T *out = neg_v(ptr, neg.ptr, N);
+    MUST(out != NULL);
+
+    return neg;
+}
+
+template <i32 N, typename T>
+Arr<N, float> Arr<N, T>::operator/(const T &rhs) const {
+    TESTED();
+
+    Arr<N, float> div;
+    const float *out = div_vs(ptr, rhs, div.ptr, N);
+    if (out != NULL) {
+        return div;
     } else {
         return Arr<N, float>::zeros();
     }

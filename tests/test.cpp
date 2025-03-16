@@ -218,6 +218,27 @@ i32 Arr_bary_test(void) {
     return 1;
 }
 
+i32 Arr_operator_neg_test(void) {
+    V2i u = {2, -3};
+    V2i expected_neg = {-2, 3};
+
+    V2i neg = -u;
+    ASSERTZ(neg == expected_neg);
+
+    return 1;
+}
+
+i32 Arr_operator_div_test(void) {
+    V2i u = {2, -3};
+    i32 scalar = 2;
+    V2f expected_div = {1, -1.5f};
+
+    V2f div = u / scalar;
+    ASSERTZ(div == expected_div);
+
+    return 1;
+}
+
 i32 Arr_operator_sub_test(void) {
     V2i u = {2, 3};
     V2i v = {4, 9};
