@@ -34,7 +34,7 @@ i32 Buf_get_test(void) {
 
 // cpp.hpp::Arr
 i32 Arr_len_test(void) {
-    Arr<3, i32> arr;
+    Arr<3, i32> arr = {0, 1, 2};
     ASSERTZ(arr.len() == 3);
 
     return 1;
@@ -265,7 +265,10 @@ i32 Arr_operator_eq_test(void) {
 
 // cpp.hpp::Mat
 i32 Mat_len_test(void) {
-    Mat<2, i32> mat;
+    Mat<2, i32> mat = {
+        0, 1, //
+        2, 3, //
+    };
     ASSERTZ(mat.len() == 2);
 
     return 1;
