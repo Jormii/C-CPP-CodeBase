@@ -628,13 +628,13 @@ T max(const T &x, const T &y) {
 }
 
 template <typename T>
-i32 eq(const T &x, const T &y) {
+inline i32 eq(const T &x, const T &y) {
     TESTED();
     return x == y;
 }
 
 template <>
-i32 eq<float>(const float &x, const float &y) {
+inline i32 eq<float>(const float &x, const float &y) {
     TESTED();
 
     float d = x - y;
