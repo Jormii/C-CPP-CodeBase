@@ -815,6 +815,9 @@ float *bary_v(                          //
     C_ARR_ASSERT(u, len);
     C_ARR_ASSERT(v, len);
     C_ARR_ASSERT(w, len);
+    ASSERTZ(a >= 0.0f);
+    ASSERTZ(b >= 0.0f);
+    ASSERTZ(g >= 0.0f);
     ASSERTZ(eq(a + b + g, 1.0f));
     C_ARR_ASSERT(out, len);
 
