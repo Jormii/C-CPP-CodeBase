@@ -488,7 +488,7 @@ i32 fill_v_test(void) {
 
     i32 fill[C_ARR_LEN(expected_fill)];
     const i32 *out = fill_v(x, fill, C_ARR_LEN(expected_fill));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == fill);
     ASSERTZ(eq_v(fill, expected_fill, C_ARR_LEN(expected_fill)));
 
     return 1;
@@ -513,7 +513,7 @@ i32 norm_v_test(void) {
 
     float norm[C_ARR_LEN(u)];
     const float *out = norm_v(u, norm, C_ARR_LEN(u));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == norm);
     ASSERTZ(eq_v(norm, expected_norm, C_ARR_LEN(u)));
 
     return 1;
@@ -550,7 +550,7 @@ i32 sub_v_test(void) {
 
     i32 sub[C_ARR_LEN(u)];
     const i32 *out = sub_v(u, v, sub, C_ARR_LEN(u));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == sub);
     ASSERTZ(eq_v(sub, expected_sub, C_ARR_LEN(u)));
 
     return 1;
@@ -577,7 +577,7 @@ i32 mix_v_test(void) {
 
     float mix[C_ARR_LEN(u)];
     const float *out = mix_v(u, v, t, mix, C_ARR_LEN(u));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == mix);
     ASSERTZ(eq_v(mix, expected_mix, C_ARR_LEN(u)));
 
     return 1;
@@ -594,7 +594,7 @@ i32 bary_v_test(void) {
 
     float bary[C_ARR_LEN(u)];
     const float *out = bary_v(u, v, w, a, b, g, bary, C_ARR_LEN(u));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == bary);
     ASSERTZ(eq_v(bary, expected_bary, C_ARR_LEN(u)));
 
     return 1;
@@ -608,7 +608,7 @@ i32 I_m_test(void) {
 
     i32 I[C_ARR_LEN(expected_I)];
     const i32 *out = I_m(I, C_ARR_LEN(expected_I) >> 1);
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == I);
     ASSERTZ(eq_v(I, expected_I, C_ARR_LEN(expected_I)));
 
     return 1;
@@ -623,7 +623,7 @@ i32 fill_m_test(void) {
 
     i32 fill[C_ARR_LEN(expected_fill)];
     const i32 *out = fill_m(x, fill, C_ARR_LEN(expected_fill) >> 1);
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == fill);
     ASSERTZ(eq_v(fill, expected_fill, C_ARR_LEN(expected_fill)));
 
     return 1;
@@ -641,7 +641,7 @@ i32 trans_m_test(void) {
 
     i32 trans[C_ARR_LEN(m)];
     const i32 *out = trans_m(m, trans, C_ARR_LEN(m) >> 1);
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == trans);
     ASSERTZ(eq_v(trans, expected_trans, C_ARR_LEN(m)));
 
     return 1;
@@ -657,7 +657,7 @@ i32 vmult_m_test(void) {
 
     i32 vmult[C_ARR_LEN(u)];
     const i32 *out = vmult_m(m, u, vmult, C_ARR_LEN(u));
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == vmult);
     ASSERTZ(eq_v(vmult, expected_vmult, C_ARR_LEN(u)));
 
     return 1;
@@ -679,7 +679,7 @@ i32 mmult_m_test(void) {
 
     i32 mmult[C_ARR_LEN(m)];
     const i32 *out = mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1);
-    ASSERTZ(out != NULL);
+    ASSERTZ(out == mmult);
     ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
 
     return 1;
