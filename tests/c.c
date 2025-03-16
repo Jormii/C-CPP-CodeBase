@@ -9,11 +9,11 @@ i32 C_ARR_LEN_test(void) {
 }
 
 i32 C_ARR_LEN_NULL_test(void) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpointer-arith"
-#pragma clang diagnostic ignored "-Wsizeof-pointer-div"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+#pragma GCC diagnostic ignored "-Wsizeof-pointer-div"
     ASSERTZ(C_ARR_LEN(NULL) == 0);
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
     return 1;
 }
@@ -22,10 +22,10 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
     i32 arr[3];
     i32 *decay = arr;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsizeof-pointer-div"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsizeof-pointer-div"
     ASSERTZ(C_ARR_LEN(decay) != 3);
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
     return 1;
 }
