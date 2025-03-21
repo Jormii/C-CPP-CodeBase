@@ -62,4 +62,9 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 i32 c_arr_check(const void *ptr, i32 len) NODISCARD;
 i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx) NODISCARD;
 
+void prof_dump();
+void prof_kick(i32 idx);
+void prof_stop(i32 idx);
+void prof_rename(i32 idx, const char *name);
+
 #pragma endregion
