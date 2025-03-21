@@ -1,6 +1,6 @@
 #include "cpp.hpp"
 
-// cpp.hpp::SWAP
+// cpp.hpp::(Macros)
 i32 SWAP_test(void) {
     i32 one = 1;
     i32 two = 2;
@@ -13,20 +13,56 @@ i32 SWAP_test(void) {
 }
 
 // cpp.hpp::Buf
-i32 Buf_get_test(void) {
+i32 Buf_end_test(void) {
+    i32 arr[] = {1, 2, 3};
+
+    Buf<i32> buf = BUF_FROM_C_ARR(arr);
+    const Buf<i32> buf_const = BUF_FROM_C_ARR(arr);
+
+    i32 *end = buf.end();
+    const i32 *endc = buf.end();
+    const i32 *endc_const = buf_const.end();
+
+    ASSERTZ(end == (arr + C_ARR_LEN(arr)));
+    ASSERTZ(endc == (arr + C_ARR_LEN(arr)));
+    ASSERTZ(endc_const == (arr + C_ARR_LEN(arr)));
+
+    return 1;
+}
+
+i32 Buf_operator_subscript_test(void) {
     i32 arr[] = {1, 2, 3};
 
     Buf<i32> buf = BUF_FROM_C_ARR(arr);
     const Buf<i32> buf_const = BUF_FROM_C_ARR(arr);
 
     for (i32 i = 0; i < buf.len; ++i) {
-        i32 *p = buf.get(i);
-        const i32 *pc = buf.get(i);
-        const i32 *pc_const = buf_const.get(i);
+        i32 &p = buf[i];
+        const i32 &pc = buf[i];
+        const i32 &pc_const = buf_const[i];
 
-        ASSERTZ(p == (arr + i));
-        ASSERTZ(pc == (arr + i));
-        ASSERTZ(pc_const == (arr + i));
+        ASSERTZ(p == arr[i]);
+        ASSERTZ(pc == arr[i]);
+        ASSERTZ(pc_const == arr[i]);
+    }
+
+    return 1;
+}
+
+i32 Buf_operator_add_test(void) {
+    i32 arr[] = {1, 2, 3};
+
+    Buf<i32> buf = BUF_FROM_C_ARR(arr);
+    const Buf<i32> buf_const = BUF_FROM_C_ARR(arr);
+
+    for (i32 i = 0; i < buf.len; ++i) {
+        i32 *p = buf + i;
+        const i32 *pc = buf + i;
+        const i32 *pc_const = buf_const + i;
+
+        ASSERTZ(p == arr + i);
+        ASSERTZ(pc == arr + i);
+        ASSERTZ(pc_const == arr + i);
     }
 
     return 1;

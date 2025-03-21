@@ -36,8 +36,13 @@ struct Buf {
 
     Buf(T *const ptr, i32 len);
 
-    T *get(i32 idx);
-    const T *get(i32 idx) const;
+    T *end();
+    const T *end() const;
+
+    T &operator[](i32 idx);
+    const T &operator[](i32 idx) const;
+    T *operator+(i32 idx);
+    const T *operator+(i32 idx) const;
 };
 
 #define BUF_FROM_C_ARR(c_arr) {c_arr, C_ARR_LEN(c_arr)}
@@ -245,16 +250,35 @@ Buf<T>::Buf(T *const ptr, i32 len) : ptr{ptr}, len{len} {
 }
 
 template <typename T>
-T *Buf<T>::get(i32 idx) {
-    MUST(c_arr_idx_check(ptr, len, idx));
-
-    return ptr + idx;
+T *Buf<T>::end() {
+    return CONST_CAST(T *, end);
 }
 
 template <typename T>
-const T *Buf<T>::get(i32 idx) const {
-    MUST(c_arr_idx_check(ptr, len, idx));
+const T *Buf<T>::end() const {
+    MUST(c_arr_check(ptr, len));
+    return ptr + len;
+}
 
+template <typename T>
+T &Buf<T>::operator[](i32 idx) {
+    return CONST_CAST(T &, operator[], idx);
+}
+
+template <typename T>
+const T &Buf<T>::operator[](i32 idx) const {
+    MUST(c_arr_idx_check(ptr, len, idx));
+    return ptr[idx];
+}
+
+template <typename T>
+T *Buf<T>::operator+(i32 idx) {
+    return CONST_CAST(T *, operator+, idx);
+}
+
+template <typename T>
+const T *Buf<T>::operator+(i32 idx) const {
+    MUST(c_arr_idx_check(ptr, len, idx));
     return ptr + idx;
 }
 
