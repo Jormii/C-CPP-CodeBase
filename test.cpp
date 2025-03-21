@@ -30,9 +30,10 @@ extern i32 c_arr_idx_check_test(void);
 
 // From ./tests/cpp.cpp
 extern i32 SWAP_test(void);
-extern i32 Buf_get_test(void);
+extern i32 Buf_end_test(void);
+extern i32 Buf_operator_subscript_test(void);
+extern i32 Buf_operator_add_test(void);
 extern i32 Arr_len_test(void);
-extern i32 Arr_get_test(void);
 extern i32 Arr_mag_test(void);
 extern i32 Arr_norm_test(void);
 extern i32 Arr_x_test(void);
@@ -48,13 +49,17 @@ extern i32 Arr_dot_test(void);
 extern i32 Arr_cross_test(void);
 extern i32 Arr_mix_test(void);
 extern i32 Arr_bary_test(void);
+extern i32 Arr_operator_subscript_test(void);
+extern i32 Arr_operator_add_test(void);
 extern i32 Arr_operator_neg_test(void);
 extern i32 Arr_operator_div_test(void);
 extern i32 Arr_operator_sub_test(void);
 extern i32 Arr_operator_eq_test(void);
+extern i32 Mat_n_test(void);
 extern i32 Mat_len_test(void);
-extern i32 Mat_get_test(void);
 extern i32 Mat_trans_test(void);
+extern i32 Mat_get_test(void);
+extern i32 Mat_getp_test(void);
 extern i32 Mat_I_test(void);
 extern i32 Mat_ones_test(void);
 extern i32 Mat_zeros_test(void);
@@ -86,7 +91,7 @@ extern i32 mmult_m_many_test(void);
 
 int main(void) {
 	i32 passed = 0;
-	const i32 N_TESTS = 61;
+	const i32 N_TESTS = 66;
 
 	testing_started_cb();
 
@@ -98,6 +103,67 @@ int main(void) {
 	passed += test_function_cb(C_ARR_LEN_arg_ptr_test, "C_ARR_LEN_arg_ptr_test");
 	passed += test_function_cb(c_arr_check_test, "c_arr_check_test");
 	passed += test_function_cb(c_arr_idx_check_test, "c_arr_idx_check_test");
+
+	test_file_cb("./tests/cpp.cpp");
+	passed += test_function_cb(SWAP_test, "SWAP_test");
+	passed += test_function_cb(Buf_end_test, "Buf_end_test");
+	passed += test_function_cb(Buf_operator_subscript_test, "Buf_operator_subscript_test");
+	passed += test_function_cb(Buf_operator_add_test, "Buf_operator_add_test");
+	passed += test_function_cb(Arr_len_test, "Arr_len_test");
+	passed += test_function_cb(Arr_mag_test, "Arr_mag_test");
+	passed += test_function_cb(Arr_norm_test, "Arr_norm_test");
+	passed += test_function_cb(Arr_x_test, "Arr_x_test");
+	passed += test_function_cb(Arr_y_test, "Arr_y_test");
+	passed += test_function_cb(Arr_z_test, "Arr_z_test");
+	passed += test_function_cb(Arr_w_test, "Arr_w_test");
+	passed += test_function_cb(Arr_xy_test, "Arr_xy_test");
+	passed += test_function_cb(Arr_xyz_test, "Arr_xyz_test");
+	passed += test_function_cb(Arr_cast_test, "Arr_cast_test");
+	passed += test_function_cb(Arr_ones_test, "Arr_ones_test");
+	passed += test_function_cb(Arr_zeros_test, "Arr_zeros_test");
+	passed += test_function_cb(Arr_dot_test, "Arr_dot_test");
+	passed += test_function_cb(Arr_cross_test, "Arr_cross_test");
+	passed += test_function_cb(Arr_mix_test, "Arr_mix_test");
+	passed += test_function_cb(Arr_bary_test, "Arr_bary_test");
+	passed += test_function_cb(Arr_operator_subscript_test, "Arr_operator_subscript_test");
+	passed += test_function_cb(Arr_operator_add_test, "Arr_operator_add_test");
+	passed += test_function_cb(Arr_operator_neg_test, "Arr_operator_neg_test");
+	passed += test_function_cb(Arr_operator_div_test, "Arr_operator_div_test");
+	passed += test_function_cb(Arr_operator_sub_test, "Arr_operator_sub_test");
+	passed += test_function_cb(Arr_operator_eq_test, "Arr_operator_eq_test");
+	passed += test_function_cb(Mat_n_test, "Mat_n_test");
+	passed += test_function_cb(Mat_len_test, "Mat_len_test");
+	passed += test_function_cb(Mat_trans_test, "Mat_trans_test");
+	passed += test_function_cb(Mat_get_test, "Mat_get_test");
+	passed += test_function_cb(Mat_getp_test, "Mat_getp_test");
+	passed += test_function_cb(Mat_I_test, "Mat_I_test");
+	passed += test_function_cb(Mat_ones_test, "Mat_ones_test");
+	passed += test_function_cb(Mat_zeros_test, "Mat_zeros_test");
+	passed += test_function_cb(Mat_operator_mult_Arr_test, "Mat_operator_mult_Arr_test");
+	passed += test_function_cb(Mat_operator_mult_Mat_test, "Mat_operator_mult_Mat_test");
+	passed += test_function_cb(Mat_operator_eq_test, "Mat_operator_eq_test");
+	passed += test_function_cb(min_test, "min_test");
+	passed += test_function_cb(max_test, "max_test");
+	passed += test_function_cb(eq_test, "eq_test");
+	passed += test_function_cb(eq__float_test, "eq__float_test");
+	passed += test_function_cb(map_range_test, "map_range_test");
+	passed += test_function_cb(mag_v_test, "mag_v_test");
+	passed += test_function_cb(cast_v_test, "cast_v_test");
+	passed += test_function_cb(fill_v_test, "fill_v_test");
+	passed += test_function_cb(neg_v_test, "neg_v_test");
+	passed += test_function_cb(norm_v_test, "norm_v_test");
+	passed += test_function_cb(dot_v_test, "dot_v_test");
+	passed += test_function_cb(eq_v_test, "eq_v_test");
+	passed += test_function_cb(sub_v_test, "sub_v_test");
+	passed += test_function_cb(div_vs_test, "div_vs_test");
+	passed += test_function_cb(mix_v_test, "mix_v_test");
+	passed += test_function_cb(bary_v_test, "bary_v_test");
+	passed += test_function_cb(I_m_test, "I_m_test");
+	passed += test_function_cb(fill_m_test, "fill_m_test");
+	passed += test_function_cb(trans_m_test, "trans_m_test");
+	passed += test_function_cb(vmult_m_test, "vmult_m_test");
+	passed += test_function_cb(mmult_m_test, "mmult_m_test");
+	passed += test_function_cb(mmult_m_many_test, "mmult_m_many_test");
 
 	testing_finished_cb(passed, N_TESTS - passed);
 
