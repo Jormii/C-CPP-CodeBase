@@ -21,7 +21,7 @@ typedef uint32_t u32;
 
 #define MUST(EXPR)              // Assert. Exits if EXPR is false
 #define ASSERTZ(EXPR)           // Assert. Returns 0 if EXPR is false
-#define ASSERTC(EXPR, err_code) // Assert. Returns err_code if EXPR is false
+#define ASSERTV(EXPR, err_expr) // Assert. Returns err_expr if EXPR is false
 #else
 #define MAY(EXPR) EXPR
 
@@ -30,20 +30,21 @@ typedef uint32_t u32;
         must_cb(#EXPR, __FILE__, __LINE__);                                    \
     }
 
-#define ASSERTZ(EXPR) ASSERTC(EXPR, 0)
+#define ASSERTZ(EXPR) ASSERTV(EXPR, 0);
 
-#define ASSERTC(EXPR, err_code)                                                \
+#define ASSERTV(EXPR, err_expr)                                                \
     if (!(EXPR)) {                                                             \
         assert_cb(#EXPR, __FILE__, __LINE__);                                  \
-        return err_code;                                                       \
+        return err_expr;                                                       \
     }
+
 #endif
 
 // Called when MUST() macro evaluates EXPR to false
 // This callback must take care of exiting the program
 extern void must_cb(const char *expr, const char *file, i32 line);
 
-// Called when ASSERTZ() or ASSERTC() evaluate EXPR to false
+// Called when ASSERTZ() or ASSERTV() evaluate EXPR to false
 extern void assert_cb(const char *expr, const char *file, i32 line);
 
 #define MIN(x, y) ((x) <= (y)) ? (x) : (y)
