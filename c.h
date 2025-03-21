@@ -41,8 +41,10 @@ extern void must_cb(const char *expr, const char *file, i32 line);
 // Called when ASSERTZ() or ASSERTC() evaluate EXPR to false
 extern void assert_cb(const char *expr, const char *file, i32 line);
 
+#define MIN(x, y) ((x) <= (y)) ? (x) : (y)
+#define MAX(x, y) ((x) >= (y)) ? (x) : (y)
+
 #define C_ARR_LEN(c_arr)                                                       \
-    TESTED()                                                                   \
     (((c_arr) == NULL) ? 0 : sizeof((c_arr)) / sizeof(*(c_arr)))
 
 #define C_ARR_ASSERT(ptr, len)                                                 \

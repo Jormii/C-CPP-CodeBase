@@ -1,6 +1,30 @@
 #include "c.h"
 
-// c.h::C_ARR_LEN
+// c.h::(Macros)
+i32 MIN_test(void) {
+    i32 min = MIN(1, 2);
+    i32 expected_min = 1;
+    ASSERTZ(min == expected_min);
+
+    i32 min_expr = MIN(1 + 2, 2);
+    i32 expected_min_expr = 2;
+    ASSERTZ(min_expr == expected_min_expr);
+
+    return 1;
+}
+
+i32 MAX_test(void) {
+    i32 max = MAX(1, 2);
+    i32 expected_max = 2;
+    ASSERTZ(max == expected_max);
+
+    i32 max_expr = MAX(1 + 2, 2);
+    i32 expected_max_expr = 3;
+    ASSERTZ(max_expr == expected_max_expr);
+
+    return 1;
+}
+
 i32 C_ARR_LEN_test(void) {
     i32 arr[3];
     ASSERTZ(C_ARR_LEN(arr) == 3);

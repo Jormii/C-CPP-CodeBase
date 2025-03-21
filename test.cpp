@@ -17,6 +17,8 @@ extern void testing_finished_cb(i32 passed, i32 failed);
 #ifdef __cplusplus
 extern "C" {
 #endif
+extern i32 MIN_test(void);
+extern i32 MAX_test(void);
 extern i32 C_ARR_LEN_test(void);
 extern i32 C_ARR_LEN_NULL_test(void);
 extern i32 C_ARR_LEN_arg_ptr_test(void);
@@ -91,6 +93,8 @@ int main(void) {
 	testing_started_cb();
 
 	test_file_cb("./tests/c.c");
+	passed += test_function_cb(MIN_test, "MIN_test");
+	passed += test_function_cb(MAX_test, "MAX_test");
 	passed += test_function_cb(C_ARR_LEN_test, "C_ARR_LEN_test");
 	passed += test_function_cb(C_ARR_LEN_NULL_test, "C_ARR_LEN_NULL_test");
 	passed += test_function_cb(C_ARR_LEN_arg_ptr_test, "C_ARR_LEN_arg_ptr_test");
