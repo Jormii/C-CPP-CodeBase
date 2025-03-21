@@ -2,10 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define ENDC "\033[0m"
 #define BOLD "\033[1m"
 #define UNDERLINE "\033[4m"
@@ -52,7 +48,3 @@ void testing_finished_cb(i32 passed, i32 failed) {
     printf(PASSED "\nPASSED:" ENDC " %d\n", passed);
     printf(FAILED "FAILED:" ENDC " %d\n", failed);
 }
-
-#ifdef __cplusplus
-}
-#endif
