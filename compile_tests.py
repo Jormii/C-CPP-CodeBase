@@ -76,7 +76,7 @@ def get_source_files(dir: str) -> List[str]:
 
 
 def get_signatures(files: List[str]) -> Dict[str, List[str]]:
-    TYPO_REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*)\((?:void)?\)"
+    TYPO_REGEX = r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*)\(.*?\)"
     REGEX =      r"(?:int32_t|i32) ([_a-zA-Z][_a-zA-Z0-9]*_test)\((?:void)?\)"
 
     defined_in: Dict[str, str] = {}
