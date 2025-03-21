@@ -124,11 +124,14 @@ struct Mat {
 
     T ptr[N * N];
 
+    i32 n() const;
     i32 len() const;
-    T *get(i32 row, i32 col);
-    const T *get(i32 row, i32 col) const;
-
     Mat trans() const;
+
+    T &get(i32 row, i32 col);
+    const T &get(i32 row, i32 col) const;
+    T *getp(i32 row, i32 col);
+    const T *getp(i32 row, i32 col) const;
 
     void print(const char *name) const;
 
@@ -481,34 +484,50 @@ bool Arr<N, T>::operator==(const Arr &rhs) const {
 }
 
 template <i32 N, typename T>
-i32 Mat<N, T>::len() const {
+i32 Mat<N, T>::n() const {
     return N;
 }
 
 template <i32 N, typename T>
-T *Mat<N, T>::get(i32 row, i32 col) {
-    MUST(c_arr_idx_check(ptr, N, row));
-    MUST(c_arr_idx_check(ptr, N, col));
-
-    return ptr + (row * N + col);
-};
-
-template <i32 N, typename T>
-const T *Mat<N, T>::get(i32 row, i32 col) const {
-    MUST(c_arr_idx_check(ptr, N, row));
-    MUST(c_arr_idx_check(ptr, N, col));
-
-    return ptr + (row * N + col);
-};
+i32 Mat<N, T>::len() const {
+    return N * N;
+}
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::trans() const {
     Mat t;
-    const T *out = trans_m(ptr, t.ptr, N);
-    MUST(out != NULL);
+    trans_m(ptr, t.ptr, N);
 
     return t;
 }
+
+template <i32 N, typename T>
+T &Mat<N, T>::get(i32 row, i32 col) {
+    return CONST_CAST(T &, get, row, col);
+};
+
+template <i32 N, typename T>
+const T &Mat<N, T>::get(i32 row, i32 col) const {
+    MUST(c_arr_idx_check(ptr, N, row));
+    MUST(c_arr_idx_check(ptr, N, col));
+
+    i32 idx = row * N + col;
+    return ptr[idx];
+};
+
+template <i32 N, typename T>
+T *Mat<N, T>::getp(i32 row, i32 col) {
+    return CONST_CAST(T *, getp, row, col);
+};
+
+template <i32 N, typename T>
+const T *Mat<N, T>::getp(i32 row, i32 col) const {
+    MUST(c_arr_idx_check(ptr, N, row));
+    MUST(c_arr_idx_check(ptr, N, col));
+
+    i32 idx = row * N + col;
+    return ptr + idx;
+};
 
 template <i32 N, typename T>
 void Mat<N, T>::print(const char *name) const {
@@ -516,7 +535,7 @@ void Mat<N, T>::print(const char *name) const {
     for (i32 i = 0; i < N; ++i) {
         printf("\t[ ");
         for (i32 j = 0; j < N; ++j) {
-            printf("%f\t", (float)*get(i, j));
+            printf("%f\t", (float)get(i, j));
         }
         printf("]\n");
     }
@@ -525,8 +544,7 @@ void Mat<N, T>::print(const char *name) const {
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::I() {
     Mat m;
-    const T *out = I_m(m.ptr, N);
-    MUST(out != NULL);
+    I_m(m.ptr, N);
 
     return m;
 }
@@ -534,8 +552,7 @@ Mat<N, T> Mat<N, T>::I() {
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::ones() {
     Mat m;
-    const T *out = fill_m((T)1, m.ptr, N);
-    MUST(out != NULL);
+    fill_m((T)1, m.ptr, N);
 
     return m;
 }
@@ -543,8 +560,7 @@ Mat<N, T> Mat<N, T>::ones() {
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::zeros() {
     Mat m;
-    const T *out = fill_m((T)0, m.ptr, N);
-    MUST(out != NULL);
+    fill_m((T)0, m.ptr, N);
 
     return m;
 }
@@ -552,8 +568,7 @@ Mat<N, T> Mat<N, T>::zeros() {
 template <i32 N, typename T>
 Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
     Arr<N, T> vmult;
-    const T *out = vmult_m(ptr, rhs.ptr, vmult.ptr, N);
-    MUST(out != NULL);
+    vmult_m(ptr, rhs.ptr, vmult.ptr, N);
 
     return vmult;
 }
@@ -561,8 +576,7 @@ Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
     Mat mmult;
-    const T *out = mmult_m<N, T>(ptr, rhs.ptr, mmult.ptr);
-    MUST(out != NULL);
+    mmult_m<N, T>(ptr, rhs.ptr, mmult.ptr);
 
     return mmult;
 }

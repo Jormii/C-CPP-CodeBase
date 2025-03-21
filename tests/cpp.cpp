@@ -319,41 +319,22 @@ i32 Arr_operator_eq_test(void) {
 }
 
 // cpp.hpp::Mat
+i32 Mat_n_test(void) {
+    Mat<2, i32> mat = {
+        0, 1, //
+        2, 3, //
+    };
+    ASSERTZ(mat.n() == 2);
+
+    return 1;
+}
+
 i32 Mat_len_test(void) {
     Mat<2, i32> mat = {
         0, 1, //
         2, 3, //
     };
-    ASSERTZ(mat.len() == 2);
-
-    return 1;
-}
-
-i32 Mat_get_test(void) {
-    Mat<2, i32> mat = {
-        0, 1, //
-        2, 3, //
-    };
-    const Mat<2, i32> mat_const = {
-        0, 1, //
-        2, 3, //
-    };
-    ASSERTZ(mat.len() == mat_const.len());
-
-    i32 len = mat.len();
-    for (i32 i = 0, idx = 0; i < len; ++i) {
-        for (i32 j = 0; j < len; ++j, ++idx) {
-            i32 *p = mat.get(i, j);
-            const i32 *pc = mat.get(i, j);
-            const i32 *pc_const = mat_const.get(i, j);
-
-            i32 idx = i * len + j;
-            ASSERTZ(*p == idx);
-            ASSERTZ(p == (mat.ptr + idx));
-            ASSERTZ(pc == (mat.ptr + idx));
-            ASSERTZ(pc_const == (mat_const.ptr + idx));
-        }
-    }
+    ASSERTZ(mat.len() == (2 * 2));
 
     return 1;
 }
@@ -370,6 +351,63 @@ i32 Mat_trans_test(void) {
 
     M2i trans = mat.trans();
     ASSERTZ(trans == expected_trans);
+
+    return 1;
+}
+
+i32 Mat_get_test(void) {
+    Mat<2, i32> mat = {
+        0, 1, //
+        2, 3, //
+    };
+    const Mat<2, i32> mat_const = {
+        0, 1, //
+        2, 3, //
+    };
+    ASSERTZ(mat.n() == mat_const.n());
+
+    i32 n = mat.n();
+    for (i32 i = 0, idx = 0; i < n; ++i) {
+        for (i32 j = 0; j < n; ++j, ++idx) {
+            i32 &p = mat.get(i, j);
+            const i32 &pc = mat.get(i, j);
+            const i32 &pc_const = mat_const.get(i, j);
+
+            i32 idx = i * n + j;
+            ASSERTZ(p == mat.ptr[idx]);
+            ASSERTZ(pc == mat.ptr[idx]);
+            ASSERTZ(pc_const == mat_const.ptr[idx]);
+        }
+    }
+
+    return 1;
+}
+
+i32 Mat_getp_test(void) {
+    Mat<2, i32> mat = {
+        0, 1, //
+        2, 3, //
+    };
+    const Mat<2, i32> mat_const = {
+        0, 1, //
+        2, 3, //
+    };
+    ASSERTZ(mat.n() == mat_const.n());
+
+    i32 n = mat.n();
+    for (i32 i = 0, idx = 0; i < n; ++i) {
+        for (i32 j = 0; j < n; ++j, ++idx) {
+            i32 *p = mat.getp(i, j);
+            const i32 *pc = mat.getp(i, j);
+            const i32 *pc_const = mat_const.getp(i, j);
+
+            i32 idx = i * n + j;
+            ASSERTZ(*p == idx);
+            ASSERTZ(p == (mat.ptr + idx));
+            ASSERTZ(pc == (mat.ptr + idx));
+            ASSERTZ(pc_const == (mat_const.ptr + idx));
+        }
+    }
 
     return 1;
 }
