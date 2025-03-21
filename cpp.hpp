@@ -54,19 +54,16 @@ struct Arr {
     T ptr[N];
 
     i32 len() const;
-    T *get(i32 idx);
-    const T *get(i32 idx) const;
-
     float mag() const;
     Arr<N, float> norm() const;
 
     T &x();
-    T &y();
-    T &z();
-    T &w();
     const T &x() const;
+    T &y();
     const T &y() const;
+    T &z();
     const T &z() const;
+    T &w();
     const T &w() const;
     Arr<2, T> xy() const;
     Arr<3, T> xyz() const;
@@ -87,6 +84,11 @@ struct Arr {
         const Arr &u, const Arr &v, const Arr &w, //
         float a, float b, float g                 //
     );
+
+    T &operator[](i32 idx);
+    const T &operator[](i32 idx) const;
+    T *operator+(i32 idx);
+    const T *operator+(i32 idx) const;
 
     Arr operator-() const;
     Arr<N, float> operator/(const T &rhs) const;
@@ -288,20 +290,6 @@ i32 Arr<N, T>::len() const {
 }
 
 template <i32 N, typename T>
-T *Arr<N, T>::get(i32 idx) {
-    MUST(c_arr_idx_check(ptr, N, idx));
-
-    return ptr + idx;
-};
-
-template <i32 N, typename T>
-const T *Arr<N, T>::get(i32 idx) const {
-    MUST(c_arr_idx_check(ptr, N, idx));
-
-    return ptr + idx;
-}
-
-template <i32 N, typename T>
 float Arr<N, T>::mag() const {
     return mag_v(ptr, N);
 }
@@ -309,12 +297,9 @@ float Arr<N, T>::mag() const {
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::norm() const {
     Arr<N, float> norm;
-    const float *out = norm_v(ptr, norm.ptr, N);
-    if (out != NULL) {
-        return norm;
-    } else {
-        return Arr<N, float>::zeros();
-    }
+    norm_v(ptr, norm.ptr, N);
+
+    return norm;
 }
 
 template <i32 N, typename T>
@@ -325,8 +310,7 @@ T &Arr<N, T>::x() {
 template <i32 N, typename T>
 const T &Arr<N, T>::x() const {
     static_assert(N >= 1);
-
-    return ptr[0];
+    return operator[](0);
 }
 
 template <i32 N, typename T>
@@ -337,8 +321,7 @@ T &Arr<N, T>::y() {
 template <i32 N, typename T>
 const T &Arr<N, T>::y() const {
     static_assert(N >= 2);
-
-    return ptr[1];
+    return operator[](1);
 }
 
 template <i32 N, typename T>
@@ -349,8 +332,7 @@ T &Arr<N, T>::z() {
 template <i32 N, typename T>
 const T &Arr<N, T>::z() const {
     static_assert(N >= 3);
-
-    return ptr[2];
+    return operator[](2);
 }
 
 template <i32 N, typename T>
@@ -361,21 +343,18 @@ T &Arr<N, T>::w() {
 template <i32 N, typename T>
 const T &Arr<N, T>::w() const {
     static_assert(N >= 4);
-
-    return ptr[3];
+    return operator[](3);
 }
 
 template <i32 N, typename T>
 Arr<2, T> Arr<N, T>::xy() const {
     static_assert(N >= 2);
-
     return Arr<2, T>{x(), y()};
 }
 
 template <i32 N, typename T>
 Arr<3, T> Arr<N, T>::xyz() const {
     static_assert(N >= 3);
-
     return Arr<3, T>{x(), y(), z()};
 }
 
@@ -383,17 +362,18 @@ template <i32 N, typename T>
 template <typename V>
 Arr<N, V> Arr<N, T>::cast() const {
     Arr<N, V> arr;
-    const V *out = cast_v(ptr, arr.ptr, N);
-    MUST(out != NULL);
+    cast_v(ptr, arr.ptr, N);
 
     return arr;
 }
 
 template <i32 N, typename T>
 void Arr<N, T>::print(const char *name) const {
+    MUST(name != NULL);
+
     printf("Arr<%ld> %s [", N, name);
     for (i32 i = 0; i < N; ++i) {
-        printf("%f\t", (float)*get(i));
+        printf("%f\t", (float)(this->operator[](i)));
     }
     printf("]\n");
 }
@@ -401,8 +381,7 @@ void Arr<N, T>::print(const char *name) const {
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::ones() {
     Arr arr;
-    const T *out = fill_v((T)1, arr.ptr, N);
-    MUST(out != NULL);
+    fill_v((T)1, arr.ptr, N);
 
     return arr;
 }
@@ -410,8 +389,7 @@ Arr<N, T> Arr<N, T>::ones() {
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::zeros() {
     Arr arr;
-    const T *out = fill_v((T)0, arr.ptr, N);
-    MUST(out != NULL);
+    fill_v((T)0, arr.ptr, N);
 
     return arr;
 }
@@ -426,21 +404,18 @@ Arr<N, T> Arr<N, T>::cross(const Arr &u, const Arr &v) {
     static_assert(N == 3);
 
     return {
-        u.ptr[1] * v.ptr[2] - u.ptr[2] * v.ptr[1],
-        u.ptr[2] * v.ptr[0] - u.ptr[0] * v.ptr[2],
-        u.ptr[0] * v.ptr[1] - u.ptr[1] * v.ptr[0],
+        u[1] * v[2] - u[2] * v[1],
+        u[2] * v[0] - u[0] * v[2],
+        u[0] * v[1] - u[1] * v[0],
     };
 }
 
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::mix(const Arr &u, const Arr &v, float t) {
     Arr<N, float> mix;
-    const float *out = mix_v(u.ptr, v.ptr, t, mix.ptr, N);
-    if (out != NULL) {
-        return mix;
-    } else {
-        return Arr<N, float>::zeros();
-    }
+    mix_v(u.ptr, v.ptr, t, mix.ptr, N);
+
+    return mix;
 }
 
 template <i32 N, typename T>
@@ -449,19 +424,37 @@ Arr<N, float> Arr<N, T>::bary(                //
     float a, float b, float g                 //
 ) {
     Arr<N, float> bary;
-    const float *out = bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
-    if (out != NULL) {
-        return bary;
-    } else {
-        return Arr<N, float>::zeros();
-    }
+    bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
+
+    return bary;
+}
+
+template <i32 N, typename T>
+T &Arr<N, T>::operator[](i32 idx) {
+    return CONST_CAST(T &, operator[], idx);
+}
+
+template <i32 N, typename T>
+const T &Arr<N, T>::operator[](i32 idx) const {
+    MUST(c_arr_idx_check(ptr, N, idx));
+    return ptr[idx];
+}
+
+template <i32 N, typename T>
+T *Arr<N, T>::operator+(i32 idx) {
+    return CONST_CAST(T *, operator+, idx);
+}
+
+template <i32 N, typename T>
+const T *Arr<N, T>::operator+(i32 idx) const {
+    MUST(c_arr_idx_check(ptr, N, idx));
+    return ptr + idx;
 }
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::operator-() const {
     Arr neg;
-    const T *out = neg_v(ptr, neg.ptr, N);
-    MUST(out != NULL);
+    neg_v(ptr, neg.ptr, N);
 
     return neg;
 }
@@ -469,19 +462,15 @@ Arr<N, T> Arr<N, T>::operator-() const {
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::operator/(const T &rhs) const {
     Arr<N, float> div;
-    const float *out = div_vs(ptr, rhs, div.ptr, N);
-    if (out != NULL) {
-        return div;
-    } else {
-        return Arr<N, float>::zeros();
-    }
+    div_vs(ptr, rhs, div.ptr, N);
+
+    return div;
 }
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::operator-(const Arr &rhs) const {
     Arr sub;
-    const T *out = sub_v(ptr, rhs.ptr, sub.ptr, N);
-    MUST(out != NULL);
+    sub_v(ptr, rhs.ptr, sub.ptr, N);
 
     return sub;
 }

@@ -76,26 +76,6 @@ i32 Arr_len_test(void) {
     return 1;
 }
 
-i32 Arr_get_test(void) {
-    Arr<3, i32> arr = {0, 1, 2};
-    const Arr<3, i32> arr_const = {0, 1, 2};
-    ASSERTZ(arr.len() == arr_const.len());
-
-    i32 len = arr.len();
-    for (i32 i = 0; i < len; ++i) {
-        i32 *p = arr.get(i);
-        const i32 *pc = arr.get(i);
-        const i32 *pc_const = arr_const.get(i);
-
-        ASSERTZ(*p == i);
-        ASSERTZ(p == (arr.ptr + i));
-        ASSERTZ(pc == (arr.ptr + i));
-        ASSERTZ(pc_const == (arr_const.ptr + i));
-    }
-
-    return 1;
-}
-
 i32 Arr_mag_test(void) {
     V2i u = {3, 4};
     float expected_mag = 5.0f;
@@ -250,6 +230,45 @@ i32 Arr_bary_test(void) {
 
     V2f bary = V2i::bary(u, v, w, a, b, g);
     ASSERTZ(bary == expected_bary);
+
+    return 1;
+}
+
+i32 Arr_operator_subscript_test(void) {
+    Arr<3, i32> arr = {0, 1, 2};
+    const Arr<3, i32> arr_const = {0, 1, 2};
+    ASSERTZ(arr.len() == arr_const.len());
+
+    i32 len = arr.len();
+    for (i32 i = 0; i < len; ++i) {
+        i32 &p = arr[i];
+        const i32 &pc = arr[i];
+        const i32 &pc_const = arr_const[i];
+
+        ASSERTZ(p == arr.ptr[i]);
+        ASSERTZ(pc == arr.ptr[i]);
+        ASSERTZ(pc_const == arr_const.ptr[i]);
+    }
+
+    return 1;
+}
+
+i32 Arr_operator_add_test(void) {
+    Arr<3, i32> arr = {0, 1, 2};
+    const Arr<3, i32> arr_const = {0, 1, 2};
+    ASSERTZ(arr.len() == arr_const.len());
+
+    i32 len = arr.len();
+    for (i32 i = 0; i < len; ++i) {
+        i32 *p = arr + i;
+        const i32 *pc = arr + i;
+        const i32 *pc_const = arr_const + i;
+
+        ASSERTZ(*p == i);
+        ASSERTZ(p == (arr.ptr + i));
+        ASSERTZ(pc == (arr.ptr + i));
+        ASSERTZ(pc_const == (arr_const.ptr + i));
+    }
 
     return 1;
 }
