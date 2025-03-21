@@ -6,20 +6,20 @@
 typedef uint8_t u8;
 typedef int32_t i32;
 typedef uint32_t u32;
-typedef int64_t i64;
 
-#define MAY(EXPR)  // Explicit comment
-#define NOTE(EXPR) // Explicit comment
+#pragma region macro
 
-// To indicate if a function was tested
-#define TESTED()
-#define UNTESTED(MSG) MUST(0 && MSG)
+#define NOTE(EXPR)                   // Explicit comment
 
 #ifdef NDEBUG
+#define MAY(EXPR) // Explicit comment
+
 #define MUST(EXPR)              // Assert. Exits if EXPR is false
 #define ASSERTZ(EXPR)           // Assert. Returns 0 if EXPR is false
 #define ASSERTC(EXPR, err_code) // Assert. Returns err_code if EXPR is false
 #else
+#define MAY(EXPR) EXPR
+
 #define MUST(EXPR)                                                             \
     if (!(EXPR)) {                                                             \
         must_cb(#EXPR, __FILE__, __LINE__);                                    \
@@ -46,6 +46,8 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 
 #define C_ARR_LEN(c_arr)                                                       \
     (((c_arr) == NULL) ? 0 : sizeof((c_arr)) / sizeof(*(c_arr)))
+
+#pragma endregion
 
 #pragma region function
 
