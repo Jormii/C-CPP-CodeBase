@@ -47,13 +47,9 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 #define C_ARR_LEN(c_arr)                                                       \
     (((c_arr) == NULL) ? 0 : sizeof((c_arr)) / sizeof(*(c_arr)))
 
-#define C_ARR_ASSERT(ptr, len)                                                 \
-    TESTED()                                                                   \
-    ASSERTZ(ptr != NULL);                                                      \
-    ASSERTZ(len >= 0);
+#pragma region function
 
-#define C_ARR_IDX_ASSERT(ptr, len, idx)                                        \
-    TESTED();                                                                  \
-    C_ARR_ASSERT(ptr, len);                                                    \
-    ASSERTZ(idx >= 0);                                                         \
-    ASSERTZ(idx < len);
+i32 c_arr_check(const void *ptr, i32 len);
+i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx);
+
+#pragma endregion

@@ -54,56 +54,20 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
     return 1;
 }
 
-// c.h::C_ARR_ASSERT
-i32 C_ARR_ASSERT_call(const i32 *ptr, i32 len) {
-    C_ARR_ASSERT(ptr, len);
+// c.h::(Functions)
+i32 c_arr_check_test(void) {
+    i32 val = 0;
+    ASSERTZ(c_arr_check(NULL, 0) == 0);
+    ASSERTZ(c_arr_check(&val, -1) == 0);
+
     return 1;
 }
 
-i32 C_ARR_ASSERT_ptr_is_NULL_test(void) {
-    i32 *ptr = NULL;
+i32 c_arr_idx_check_test(void) {
+    i32 val = 0;
     i32 len = 0;
-
-    i32 ok = C_ARR_ASSERT_call(ptr, len);
-    ASSERTZ(!ok);
-
-    return 1;
-}
-
-i32 C_ARR_ASSERT_len_is_negative_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32 len = -1;
-
-    i32 ok = C_ARR_ASSERT_call(arr, len);
-    ASSERTZ(!ok);
-
-    return 1;
-}
-
-// c.h::C_ARR_IDX_ASSERT
-i32 C_ARR_IDX_ASSERT_call(const i32 *ptr, i32 len, i32 idx) {
-    C_ARR_IDX_ASSERT(ptr, len, idx);
-    return 1;
-}
-
-i32 C_ARR_IDX_ASSERT_underflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32 len = C_ARR_LEN(arr);
-    i32 idx = -1;
-
-    i32 ok = C_ARR_IDX_ASSERT_call(arr, len, idx);
-    ASSERTZ(!ok);
-
-    return 1;
-}
-
-i32 C_ARR_IDX_ASSERT_overflow_test(void) {
-    i32 arr[] = {1, 2, 3};
-    i32 len = C_ARR_LEN(arr);
-    i32 idx = len + 1;
-
-    i32 ok = C_ARR_IDX_ASSERT_call(arr, len, idx);
-    ASSERTZ(!ok);
+    ASSERTZ(c_arr_idx_check(NULL, len, -1) == 0);
+    ASSERTZ(c_arr_idx_check(&val, len, len + 1) == 0);
 
     return 1;
 }
