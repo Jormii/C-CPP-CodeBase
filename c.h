@@ -10,6 +10,8 @@ typedef uint32_t u32;
 #pragma region macro
 
 #define NOTE(EXPR)                   // Explicit comment
+#define UNTESTED(MSG) MUST(0 && MSG) // To annotate an untested piece of code
+
 #ifdef __cplusplus
 #define NODISCARD [[nodiscard]]
 #else
