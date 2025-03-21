@@ -10,6 +10,11 @@ typedef uint32_t u32;
 #pragma region macro
 
 #define NOTE(EXPR)                   // Explicit comment
+#ifdef __cplusplus
+#define NODISCARD [[nodiscard]]
+#else
+#define NODISCARD __attribute__((warn_unused_result))
+#endif
 
 #ifdef NDEBUG
 #define MAY(EXPR) // Explicit comment
@@ -51,7 +56,7 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 
 #pragma region function
 
-i32 c_arr_check(const void *ptr, i32 len);
-i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx);
+i32 c_arr_check(const void *ptr, i32 len) NODISCARD;
+i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx) NODISCARD;
 
 #pragma endregion
