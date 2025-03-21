@@ -240,28 +240,20 @@ template <typename T>
 #pragma region template implementation
 
 template <typename T>
-i32 __Buf(const Buf<T> *buf) {
-    TESTED();
-    C_ARR_ASSERT(buf->ptr, buf->len);
-    return 1;
-}
-
-template <typename T>
 Buf<T>::Buf(T *const ptr, i32 len) : ptr{ptr}, len{len} {
-    TESTED();
-    MUST(__Buf(this));
+    MUST(c_arr_check(ptr, len));
 }
 
 template <typename T>
 T *Buf<T>::get(i32 idx) {
-    C_ARR_IDX_ASSERT(ptr, len, idx);
+    MUST(c_arr_idx_check(ptr, len, idx));
 
     return ptr + idx;
 }
 
 template <typename T>
 const T *Buf<T>::get(i32 idx) const {
-    C_ARR_IDX_ASSERT(ptr, len, idx);
+    MUST(c_arr_idx_check(ptr, len, idx));
 
     return ptr + idx;
 }
@@ -273,14 +265,14 @@ i32 Arr<N, T>::len() const {
 
 template <i32 N, typename T>
 T *Arr<N, T>::get(i32 idx) {
-    C_ARR_IDX_ASSERT(ptr, N, idx);
+    MUST(c_arr_idx_check(ptr, N, idx));
 
     return ptr + idx;
 };
 
 template <i32 N, typename T>
 const T *Arr<N, T>::get(i32 idx) const {
-    C_ARR_IDX_ASSERT(ptr, N, idx);
+    MUST(c_arr_idx_check(ptr, N, idx));
 
     return ptr + idx;
 }
@@ -327,13 +319,11 @@ const T &Arr<N, T>::y() const {
 
 template <i32 N, typename T>
 T &Arr<N, T>::z() {
-    TESTED();
     return CONST_CAST(T &, z);
 }
 
 template <i32 N, typename T>
 const T &Arr<N, T>::z() const {
-    TESTED();
     static_assert(N >= 3);
 
     return ptr[2];
@@ -341,13 +331,11 @@ const T &Arr<N, T>::z() const {
 
 template <i32 N, typename T>
 T &Arr<N, T>::w() {
-    TESTED();
     return CONST_CAST(T &, w);
 }
 
 template <i32 N, typename T>
 const T &Arr<N, T>::w() const {
-    TESTED();
     static_assert(N >= 4);
 
     return ptr[3];
@@ -355,7 +343,6 @@ const T &Arr<N, T>::w() const {
 
 template <i32 N, typename T>
 Arr<2, T> Arr<N, T>::xy() const {
-    TESTED();
     static_assert(N >= 2);
 
     return Arr<2, T>{x(), y()};
@@ -363,7 +350,6 @@ Arr<2, T> Arr<N, T>::xy() const {
 
 template <i32 N, typename T>
 Arr<3, T> Arr<N, T>::xyz() const {
-    TESTED();
     static_assert(N >= 3);
 
     return Arr<3, T>{x(), y(), z()};
@@ -372,8 +358,6 @@ Arr<3, T> Arr<N, T>::xyz() const {
 template <i32 N, typename T>
 template <typename V>
 Arr<N, V> Arr<N, T>::cast() const {
-    TESTED();
-
     Arr<N, V> arr;
     const V *out = cast_v(ptr, arr.ptr, N);
     MUST(out != NULL);
@@ -383,8 +367,6 @@ Arr<N, V> Arr<N, T>::cast() const {
 
 template <i32 N, typename T>
 void Arr<N, T>::print(const char *name) const {
-    NOTE("LEFT UNTESTED");
-
     printf("Arr<%ld> %s [", N, name);
     for (i32 i = 0; i < N; ++i) {
         printf("%f\t", (float)*get(i));
@@ -394,8 +376,6 @@ void Arr<N, T>::print(const char *name) const {
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::ones() {
-    TESTED();
-
     Arr arr;
     const T *out = fill_v((T)1, arr.ptr, N);
     MUST(out != NULL);
@@ -405,8 +385,6 @@ Arr<N, T> Arr<N, T>::ones() {
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::zeros() {
-    TESTED();
-
     Arr arr;
     const T *out = fill_v((T)0, arr.ptr, N);
     MUST(out != NULL);
@@ -416,13 +394,11 @@ Arr<N, T> Arr<N, T>::zeros() {
 
 template <i32 N, typename T>
 T Arr<N, T>::dot(const Arr &u, const Arr &v) {
-    TESTED();
     return dot_v(u.ptr, v.ptr, N);
 }
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::cross(const Arr &u, const Arr &v) {
-    TESTED();
     static_assert(N == 3);
 
     return {
@@ -434,8 +410,6 @@ Arr<N, T> Arr<N, T>::cross(const Arr &u, const Arr &v) {
 
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::mix(const Arr &u, const Arr &v, float t) {
-    TESTED();
-
     Arr<N, float> mix;
     const float *out = mix_v(u.ptr, v.ptr, t, mix.ptr, N);
     if (out != NULL) {
@@ -450,8 +424,6 @@ Arr<N, float> Arr<N, T>::bary(                //
     const Arr &u, const Arr &v, const Arr &w, //
     float a, float b, float g                 //
 ) {
-    TESTED();
-
     Arr<N, float> bary;
     const float *out = bary_v(u.ptr, v.ptr, w.ptr, a, b, g, bary.ptr, N);
     if (out != NULL) {
@@ -463,8 +435,6 @@ Arr<N, float> Arr<N, T>::bary(                //
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::operator-() const {
-    TESTED();
-
     Arr neg;
     const T *out = neg_v(ptr, neg.ptr, N);
     MUST(out != NULL);
@@ -474,8 +444,6 @@ Arr<N, T> Arr<N, T>::operator-() const {
 
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::operator/(const T &rhs) const {
-    TESTED();
-
     Arr<N, float> div;
     const float *out = div_vs(ptr, rhs, div.ptr, N);
     if (out != NULL) {
@@ -487,8 +455,6 @@ Arr<N, float> Arr<N, T>::operator/(const T &rhs) const {
 
 template <i32 N, typename T>
 Arr<N, T> Arr<N, T>::operator-(const Arr &rhs) const {
-    TESTED();
-
     Arr sub;
     const T *out = sub_v(ptr, rhs.ptr, sub.ptr, N);
     MUST(out != NULL);
@@ -498,38 +464,32 @@ Arr<N, T> Arr<N, T>::operator-(const Arr &rhs) const {
 
 template <i32 N, typename T>
 bool Arr<N, T>::operator==(const Arr &rhs) const {
-    TESTED();
     return eq_v(ptr, rhs.ptr, N);
 }
 
 template <i32 N, typename T>
 i32 Mat<N, T>::len() const {
-    TESTED();
     return N;
 }
 
 template <i32 N, typename T>
 T *Mat<N, T>::get(i32 row, i32 col) {
-    TESTED();
-    C_ARR_IDX_ASSERT(ptr, N, row);
-    C_ARR_IDX_ASSERT(ptr, N, col);
+    MUST(c_arr_idx_check(ptr, N, row));
+    MUST(c_arr_idx_check(ptr, N, col));
 
     return ptr + (row * N + col);
 };
 
 template <i32 N, typename T>
 const T *Mat<N, T>::get(i32 row, i32 col) const {
-    TESTED();
-    C_ARR_IDX_ASSERT(ptr, N, row);
-    C_ARR_IDX_ASSERT(ptr, N, col);
+    MUST(c_arr_idx_check(ptr, N, row));
+    MUST(c_arr_idx_check(ptr, N, col));
 
     return ptr + (row * N + col);
 };
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::trans() const {
-    TESTED();
-
     Mat t;
     const T *out = trans_m(ptr, t.ptr, N);
     MUST(out != NULL);
@@ -551,8 +511,6 @@ void Mat<N, T>::print(const char *name) const {
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::I() {
-    TESTED();
-
     Mat m;
     const T *out = I_m(m.ptr, N);
     MUST(out != NULL);
@@ -562,8 +520,6 @@ Mat<N, T> Mat<N, T>::I() {
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::ones() {
-    TESTED();
-
     Mat m;
     const T *out = fill_m((T)1, m.ptr, N);
     MUST(out != NULL);
@@ -573,8 +529,6 @@ Mat<N, T> Mat<N, T>::ones() {
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::zeros() {
-    TESTED();
-
     Mat m;
     const T *out = fill_m((T)0, m.ptr, N);
     MUST(out != NULL);
@@ -584,8 +538,6 @@ Mat<N, T> Mat<N, T>::zeros() {
 
 template <i32 N, typename T>
 Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
-    TESTED();
-
     Arr<N, T> vmult;
     const T *out = vmult_m(ptr, rhs.ptr, vmult.ptr, N);
     MUST(out != NULL);
@@ -595,8 +547,6 @@ Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
-    TESTED();
-
     Mat mmult;
     const T *out = mmult_m<N, T>(ptr, rhs.ptr, mmult.ptr);
     MUST(out != NULL);
@@ -606,32 +556,26 @@ Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
 
 template <i32 N, typename T>
 bool Mat<N, T>::operator==(const Mat &rhs) const {
-    TESTED();
     return eq_v(ptr, rhs.ptr, N);
 }
 
 template <typename T>
 T min(const T &x, const T &y) {
-    TESTED();
     return (x < y) ? x : y;
 }
 
 template <typename T>
 T max(const T &x, const T &y) {
-    TESTED();
     return (x > y) ? x : y;
 }
 
 template <typename T>
 inline i32 eq(const T &x, const T &y) {
-    TESTED();
     return x == y;
 }
 
 template <>
 inline i32 eq<float>(const float &x, const float &y) {
-    TESTED();
-
     float d = x - y;
     float abs = fabsf(d);
     i32 nearly_eq = abs <= __FLT_EPSILON__;
@@ -641,7 +585,6 @@ inline i32 eq<float>(const float &x, const float &y) {
 
 template <typename T, typename V>
 float map_range(const T &x, const T &a, const T &b, const V &u, const V &v) {
-    TESTED();
     ASSERTZ(x >= min(a, b));
     ASSERTZ(x <= max(a, b));
     ASSERTZ(!eq(a, b));
@@ -656,8 +599,7 @@ float map_range(const T &x, const T &a, const T &b, const V &u, const V &v) {
 
 template <typename T>
 float mag_v(const T *u, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
+    MUST(c_arr_check(u, len));
 
     T dot = dot_v(u, u, len);
     float mag = sqrtf((float)dot);
@@ -667,9 +609,8 @@ float mag_v(const T *u, i32 len) {
 
 template <typename T, typename V>
 V *cast_v(const T *u, V *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = (V)u[i];
@@ -680,8 +621,7 @@ V *cast_v(const T *u, V *out, i32 len) {
 
 template <typename T>
 T *fill_v(const T &x, T *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = x;
@@ -692,9 +632,8 @@ T *fill_v(const T &x, T *out, i32 len) {
 
 template <typename T>
 T *neg_v(const T *u, T *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = -u[i];
@@ -705,9 +644,8 @@ T *neg_v(const T *u, T *out, i32 len) {
 
 template <typename T>
 float *norm_v(const T *u, float *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(out, len));
 
     float mag = mag_v(u, len);
     ASSERTZ(!eq(mag, 0.0f));
@@ -721,9 +659,8 @@ float *norm_v(const T *u, float *out, i32 len) {
 
 template <typename T>
 T dot_v(const T *u, const T *v, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(v, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
 
     T dot = 0;
     for (i32 i = 0; i < len; ++i) {
@@ -735,9 +672,8 @@ T dot_v(const T *u, const T *v, i32 len) {
 
 template <typename T>
 i32 eq_v(const T *u, const T *v, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(v, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
 
     i32 eq_ = 1;
     for (i32 i = 0; eq_ && i < len; ++i) {
@@ -749,10 +685,9 @@ i32 eq_v(const T *u, const T *v, i32 len) {
 
 template <typename T>
 T *sub_v(const T *u, const T *v, T *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(v, len);
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = u[i] - v[i];
@@ -763,10 +698,9 @@ T *sub_v(const T *u, const T *v, T *out, i32 len) {
 
 template <typename T>
 float *div_vs(const T *u, const T &s, float *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
+    MUST(c_arr_check(u, len));
     ASSERTZ(!eq(s, (T)0));
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = (float)(u[i]) / (float)s;
@@ -777,12 +711,11 @@ float *div_vs(const T *u, const T &s, float *out, i32 len) {
 
 template <typename T>
 float *mix_v(const T *u, const T *v, float t, float *out, i32 len) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(v, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
     ASSERTZ(t >= 0);
     ASSERTZ(t <= 1);
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = (1.0f - t) * u[i] + t * v[i];
@@ -797,15 +730,14 @@ float *bary_v(                          //
     float a, float b, float g,          //
     float *out, i32 len                 //
 ) {
-    TESTED();
-    C_ARR_ASSERT(u, len);
-    C_ARR_ASSERT(v, len);
-    C_ARR_ASSERT(w, len);
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
+    MUST(c_arr_check(w, len));
     ASSERTZ(a >= 0.0f);
     ASSERTZ(b >= 0.0f);
     ASSERTZ(g >= 0.0f);
     ASSERTZ(eq(a + b + g, 1.0f));
-    C_ARR_ASSERT(out, len);
+    MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = a * u[i] + b * v[i] + g * w[i];
@@ -816,8 +748,7 @@ float *bary_v(                          //
 
 template <typename T>
 T *I_m(T *out, i32 n) {
-    TESTED();
-    C_ARR_ASSERT(out, n);
+    MUST(c_arr_check(out, n));
 
     for (i32 i = 0, idx = 0; i < n; ++i) {
         for (i32 j = 0; j < n; ++j, ++idx) {
@@ -830,15 +761,13 @@ T *I_m(T *out, i32 n) {
 
 template <typename T>
 T *fill_m(const T &x, T *out, i32 n) {
-    TESTED();
     return fill_v(x, out, n * n);
 }
 
 template <typename T>
 T *trans_m(const T *m, T *out, i32 n) {
-    TESTED();
-    C_ARR_ASSERT(m, n);
-    C_ARR_ASSERT(out, n);
+    MUST(c_arr_check(m, n));
+    MUST(c_arr_check(out, n));
 
     for (i32 i = 0; i < n; ++i) {
         for (i32 j = 0; j < n; ++j) {
@@ -851,10 +780,9 @@ T *trans_m(const T *m, T *out, i32 n) {
 
 template <typename T>
 T *vmult_m(const T *m, const T *u, T *out, i32 n) {
-    TESTED();
-    C_ARR_ASSERT(m, n);
-    C_ARR_ASSERT(u, n);
-    C_ARR_ASSERT(out, n);
+    MUST(c_arr_check(m, n));
+    MUST(c_arr_check(u, n));
+    MUST(c_arr_check(out, n));
 
     for (i32 i = 0; i < n; ++i) {
         out[i] = dot_v(m + i * n, u, n);
@@ -865,28 +793,24 @@ T *vmult_m(const T *m, const T *u, T *out, i32 n) {
 
 template <i32 N, typename T>
 inline T *mmult_m(const T *m, const T *a, T *out) {
-    TESTED();
     return __mmult_m(m, a, out, N, 1);
 }
 
 template <i32 N, typename T>
 T *mmult_m(const T *m, const T *a, T *out, i32 cnt) {
-    TESTED();
     return __mmult_m(m, a, out, N, cnt);
 }
 
 template <typename T>
 T *mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
-    TESTED();
     return __mmult_m(m, a, out, n, cnt);
 }
 
 template <typename T>
 T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
-    TESTED();
-    C_ARR_ASSERT(m, n);
-    C_ARR_ASSERT(a, n);
-    C_ARR_ASSERT(out, n);
+    MUST(c_arr_check(m, n));
+    MUST(c_arr_check(a, n));
+    MUST(c_arr_check(out, n));
 
     i32 off = n * n;
 

@@ -12,11 +12,7 @@ typedef uint32_t u32;
 #define NOTE(EXPR)                   // Explicit comment
 #define UNTESTED(MSG) MUST(0 && MSG) // To annotate an untested piece of code
 
-#ifdef __cplusplus
-#define NODISCARD [[nodiscard]]
-#else
 #define NODISCARD __attribute__((warn_unused_result))
-#endif
 
 #ifdef NDEBUG
 #define MAY(EXPR) // Explicit comment
