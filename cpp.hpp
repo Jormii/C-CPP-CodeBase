@@ -186,16 +186,16 @@ template <typename T>
 float mag_v(const T *u, i32 len);
 
 template <typename T, typename V>
-[[nodiscard]] V *cast_v(const T *u, V *out, i32 len);
+void cast_v(const T *u, V *out, i32 len);
 
 template <typename T>
-[[nodiscard]] T *fill_v(const T &x, T *out, i32 len);
+void fill_v(const T &x, T *out, i32 len);
 
 template <typename T>
-[[nodiscard]] T *neg_v(const T *u, T *out, i32 len);
+void neg_v(const T *u, T *out, i32 len);
 
 template <typename T>
-[[nodiscard]] float *norm_v(const T *u, float *out, i32 len);
+void norm_v(const T *u, float *out, i32 len);
 
 template <typename T>
 T dot_v(const T *u, const T *v, i32 len);
@@ -204,46 +204,44 @@ template <typename T>
 i32 eq_v(const T *u, const T *v, i32 len);
 
 template <typename T>
-[[nodiscard]] T *sub_v(const T *u, const T *v, T *out, i32 len);
+void sub_v(const T *u, const T *v, T *out, i32 len);
 
 template <typename T>
-[[nodiscard]] float *div_vs(const T *u, const T &s, float *out, i32 len);
+void div_vs(const T *u, const T &s, float *out, i32 len);
 
 template <typename T>
-[[nodiscard]] float *mix_v(                              //
-    const T *u, const T *v, float t, float *out, i32 len //
-);
+void mix_v(const T *u, const T *v, float t, float *out, i32 len);
 
 template <typename T>
-[[nodiscard]] float *bary_v(            //
+void bary_v(                            //
     const T *u, const T *v, const T *w, //
     float a, float b, float g,          //
     float *out, i32 len                 //
 );
 
 template <typename T>
-[[nodiscard]] T *I_m(T *out, i32 n);
+void I_m(T *out, i32 n);
 
 template <typename T>
-[[nodiscard]] T *fill_m(const T &x, T *out, i32 n);
+void fill_m(const T &x, T *out, i32 n);
 
 template <typename T>
-[[nodiscard]] T *trans_m(const T *m, T *out, i32 n);
+void trans_m(const T *m, T *out, i32 n);
 
 template <typename T>
-[[nodiscard]] T *vmult_m(const T *m, const T *u, T *out, i32 n);
+void vmult_m(const T *m, const T *u, T *out, i32 n);
 
 template <i32 N, typename T>
-[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out);
+void mmult_m(const T *m, const T *a, T *out);
 
 template <i32 N, typename T>
-[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out, i32 cnt);
+void mmult_m(const T *m, const T *a, T *out, i32 cnt);
 
 template <typename T>
-[[nodiscard]] T *mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
+void mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
 
 template <typename T>
-[[nodiscard]] T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
+void __mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
 
 #pragma endregion
 
@@ -612,14 +610,14 @@ inline i32 eq<float>(const float &x, const float &y) {
 
 template <typename T, typename V>
 float map_range(const T &x, const T &a, const T &b, const V &u, const V &v) {
-    ASSERTZ(x >= min(a, b));
-    ASSERTZ(x <= max(a, b));
-    ASSERTZ(!eq(a, b));
-    ASSERTZ(!eq(u, v));
+    MUST(x >= min(a, b));
+    MUST(x <= max(a, b));
+    MUST(!eq(a, b));
+    MUST(!eq(u, v));
 
     float num = x - a;
     float den = b - a;
-    float map = num / den * (v - u) + u;
+    float map = (num / den) * (v - u) + u;
 
     return map;
 }
@@ -635,53 +633,45 @@ float mag_v(const T *u, i32 len) {
 }
 
 template <typename T, typename V>
-V *cast_v(const T *u, V *out, i32 len) {
+void cast_v(const T *u, V *out, i32 len) {
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = (V)u[i];
     }
-
-    return out;
 }
 
 template <typename T>
-T *fill_v(const T &x, T *out, i32 len) {
+void fill_v(const T &x, T *out, i32 len) {
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = x;
     }
-
-    return out;
 }
 
 template <typename T>
-T *neg_v(const T *u, T *out, i32 len) {
+void neg_v(const T *u, T *out, i32 len) {
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = -u[i];
     }
-
-    return out;
 }
 
 template <typename T>
-float *norm_v(const T *u, float *out, i32 len) {
+void norm_v(const T *u, float *out, i32 len) {
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(out, len));
 
     float mag = mag_v(u, len);
-    ASSERTZ(!eq(mag, 0.0f));
+    MUST(!eq(mag, 0.0f));
 
     for (i32 i = 0; i < len; ++i) {
-        out[i] = u[i] / mag;
+        out[i] = (float)(u[i]) / mag;
     }
-
-    return out;
 }
 
 template <typename T>
@@ -711,7 +701,7 @@ i32 eq_v(const T *u, const T *v, i32 len) {
 }
 
 template <typename T>
-T *sub_v(const T *u, const T *v, T *out, i32 len) {
+void sub_v(const T *u, const T *v, T *out, i32 len) {
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(v, len));
     MUST(c_arr_check(out, len));
@@ -719,40 +709,34 @@ T *sub_v(const T *u, const T *v, T *out, i32 len) {
     for (i32 i = 0; i < len; ++i) {
         out[i] = u[i] - v[i];
     }
-
-    return out;
 }
 
 template <typename T>
-float *div_vs(const T *u, const T &s, float *out, i32 len) {
+void div_vs(const T *u, const T &s, float *out, i32 len) {
     MUST(c_arr_check(u, len));
-    ASSERTZ(!eq(s, (T)0));
+    MUST(!eq(s, (T)0));
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = (float)(u[i]) / (float)s;
     }
-
-    return out;
 }
 
 template <typename T>
-float *mix_v(const T *u, const T *v, float t, float *out, i32 len) {
+void mix_v(const T *u, const T *v, float t, float *out, i32 len) {
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(v, len));
-    ASSERTZ(t >= 0);
-    ASSERTZ(t <= 1);
+    MUST(t >= 0);
+    MUST(t <= 1);
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
-        out[i] = (1.0f - t) * u[i] + t * v[i];
+        out[i] = (1.0f - t) * (float)(u[i]) + t * float(v[i]);
     }
-
-    return out;
 }
 
 template <typename T>
-float *bary_v(                          //
+void bary_v(                            //
     const T *u, const T *v, const T *w, //
     float a, float b, float g,          //
     float *out, i32 len                 //
@@ -760,21 +744,19 @@ float *bary_v(                          //
     MUST(c_arr_check(u, len));
     MUST(c_arr_check(v, len));
     MUST(c_arr_check(w, len));
-    ASSERTZ(a >= 0.0f);
-    ASSERTZ(b >= 0.0f);
-    ASSERTZ(g >= 0.0f);
-    ASSERTZ(eq(a + b + g, 1.0f));
+    MUST(a >= 0.0f);
+    MUST(b >= 0.0f);
+    MUST(g >= 0.0f);
+    MUST(eq(a + b + g, 1.0f));
     MUST(c_arr_check(out, len));
 
     for (i32 i = 0; i < len; ++i) {
-        out[i] = a * u[i] + b * v[i] + g * w[i];
+        out[i] = a * (float)(u[i]) + b * (float)(v[i]) + g * (float)(w[i]);
     }
-
-    return out;
 }
 
 template <typename T>
-T *I_m(T *out, i32 n) {
+void I_m(T *out, i32 n) {
     MUST(c_arr_check(out, n));
 
     for (i32 i = 0, idx = 0; i < n; ++i) {
@@ -782,17 +764,15 @@ T *I_m(T *out, i32 n) {
             out[idx] = (T)(i == j);
         }
     }
-
-    return out;
 }
 
 template <typename T>
-T *fill_m(const T &x, T *out, i32 n) {
-    return fill_v(x, out, n * n);
+void fill_m(const T &x, T *out, i32 n) {
+    fill_v(x, out, n * n);
 }
 
 template <typename T>
-T *trans_m(const T *m, T *out, i32 n) {
+void trans_m(const T *m, T *out, i32 n) {
     MUST(c_arr_check(m, n));
     MUST(c_arr_check(out, n));
 
@@ -801,12 +781,10 @@ T *trans_m(const T *m, T *out, i32 n) {
             out[j * n + i] = m[i * n + j];
         }
     }
-
-    return out;
 }
 
 template <typename T>
-T *vmult_m(const T *m, const T *u, T *out, i32 n) {
+void vmult_m(const T *m, const T *u, T *out, i32 n) {
     MUST(c_arr_check(m, n));
     MUST(c_arr_check(u, n));
     MUST(c_arr_check(out, n));
@@ -814,37 +792,36 @@ T *vmult_m(const T *m, const T *u, T *out, i32 n) {
     for (i32 i = 0; i < n; ++i) {
         out[i] = dot_v(m + i * n, u, n);
     }
-
-    return out;
 }
 
 template <i32 N, typename T>
-inline T *mmult_m(const T *m, const T *a, T *out) {
-    return __mmult_m(m, a, out, N, 1);
+inline void mmult_m(const T *m, const T *a, T *out) {
+    __mmult_m(m, a, out, N, 1);
 }
 
 template <i32 N, typename T>
-T *mmult_m(const T *m, const T *a, T *out, i32 cnt) {
-    return __mmult_m(m, a, out, N, cnt);
+void mmult_m(const T *m, const T *a, T *out, i32 cnt) {
+    __mmult_m(m, a, out, N, cnt);
 }
 
 template <typename T>
-T *mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
-    return __mmult_m(m, a, out, n, cnt);
+void mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+    __mmult_m(m, a, out, n, cnt);
 }
 
 template <typename T>
-T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+void __mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
     MUST(c_arr_check(m, n));
     MUST(c_arr_check(a, n));
     MUST(c_arr_check(out, n));
+    MUST(cnt >= 0);
 
-    i32 off = n * n;
+    i32 len = n * n;
 
     T *out_ptr = out;
     const T *m_ptr = m;
     const T *a_ptr = a;
-    for (i32 _ = 0; _ < cnt; ++_, m_ptr += off, a_ptr += off) {
+    for (i32 _ = 0; _ < cnt; ++_, m_ptr += len, a_ptr += len) {
         for (i32 i = 0; i < n; ++i) {
             for (i32 j = 0; j < n; ++j, ++out_ptr) {
                 T dot = 0;
@@ -856,6 +833,4 @@ T *__mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
             }
         }
     }
-
-    return out;
 }
