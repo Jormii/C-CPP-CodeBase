@@ -16,7 +16,6 @@ extern "C" {
     {                                                                          \
         static_assert(std::is_same<decltype(A), decltype(B)>::value);          \
         {                                                                      \
-            TESTED();                                                          \
             decltype(A) __tmp__ = B;                                           \
             B = A;                                                             \
             A = __tmp__;                                                       \
@@ -111,7 +110,6 @@ using V4 = Arr<4, T>;
 static_assert(sizeof(V2<i32>) == (2 * sizeof(i32)));
 static_assert(sizeof(V3<i32>) == (3 * sizeof(i32)));
 static_assert(sizeof(V4<i32>) == (4 * sizeof(i32)));
-
 
 template <i32 N, typename T>
 struct Mat {
@@ -256,7 +254,6 @@ Buf<T>::Buf(T *const ptr, i32 len) : ptr{ptr}, len{len} {
 
 template <typename T>
 T *Buf<T>::get(i32 idx) {
-    TESTED();
     C_ARR_IDX_ASSERT(ptr, len, idx);
 
     return ptr + idx;
@@ -264,7 +261,6 @@ T *Buf<T>::get(i32 idx) {
 
 template <typename T>
 const T *Buf<T>::get(i32 idx) const {
-    TESTED();
     C_ARR_IDX_ASSERT(ptr, len, idx);
 
     return ptr + idx;
@@ -272,13 +268,11 @@ const T *Buf<T>::get(i32 idx) const {
 
 template <i32 N, typename T>
 i32 Arr<N, T>::len() const {
-    TESTED();
     return N;
 }
 
 template <i32 N, typename T>
 T *Arr<N, T>::get(i32 idx) {
-    TESTED();
     C_ARR_IDX_ASSERT(ptr, N, idx);
 
     return ptr + idx;
@@ -286,7 +280,6 @@ T *Arr<N, T>::get(i32 idx) {
 
 template <i32 N, typename T>
 const T *Arr<N, T>::get(i32 idx) const {
-    TESTED();
     C_ARR_IDX_ASSERT(ptr, N, idx);
 
     return ptr + idx;
@@ -294,14 +287,11 @@ const T *Arr<N, T>::get(i32 idx) const {
 
 template <i32 N, typename T>
 float Arr<N, T>::mag() const {
-    TESTED();
     return mag_v(ptr, N);
 }
 
 template <i32 N, typename T>
 Arr<N, float> Arr<N, T>::norm() const {
-    TESTED();
-
     Arr<N, float> norm;
     const float *out = norm_v(ptr, norm.ptr, N);
     if (out != NULL) {
@@ -313,13 +303,11 @@ Arr<N, float> Arr<N, T>::norm() const {
 
 template <i32 N, typename T>
 T &Arr<N, T>::x() {
-    TESTED();
     return CONST_CAST(T &, x);
 }
 
 template <i32 N, typename T>
 const T &Arr<N, T>::x() const {
-    TESTED();
     static_assert(N >= 1);
 
     return ptr[0];
@@ -327,13 +315,11 @@ const T &Arr<N, T>::x() const {
 
 template <i32 N, typename T>
 T &Arr<N, T>::y() {
-    TESTED();
     return CONST_CAST(T &, y);
 }
 
 template <i32 N, typename T>
 const T &Arr<N, T>::y() const {
-    TESTED();
     static_assert(N >= 2);
 
     return ptr[1];
