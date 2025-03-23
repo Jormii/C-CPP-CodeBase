@@ -31,10 +31,10 @@ extern "C" {
 
 template <typename T>
 struct Buf {
-    T *const ptr;
-    const i32 len;
+    T *ptr;
+    i32 len;
 
-    Buf(T *const ptr, i32 len);
+    Buf(T *ptr, i32 len);
 
     T *end();
     const T *end() const;
@@ -248,7 +248,7 @@ void __mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
 #pragma region template implementation
 
 template <typename T>
-Buf<T>::Buf(T *const ptr, i32 len) : ptr{ptr}, len{len} {
+Buf<T>::Buf(T *ptr, i32 len) : ptr{ptr}, len{len} {
     MUST(c_arr_check(ptr, len));
 }
 
