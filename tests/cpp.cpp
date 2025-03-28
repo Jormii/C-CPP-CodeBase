@@ -553,21 +553,21 @@ i32 Mat_zeros_test(void) {
     return 1;
 }
 
-i32 Mat_operator_mult_Arr_test(void) {
+i32 Mat_operator_mul_Arr_test(void) {
     M2i m = {
         4, 5, //
         6, 7, //
     };
     V2i u = {2, 3};
-    V2i expected_vmult = {23, 33};
+    V2i expected_mul_mv = {23, 33};
 
-    V2i vmult = m * u;
-    ASSERTZ(vmult == expected_vmult);
+    V2i mul_mv = m * u;
+    ASSERTZ(mul_mv == expected_mul_mv);
 
     return 1;
 }
 
-i32 Mat_operator_mult_Mat_test(void) {
+i32 Mat_operator_mul_Mat_test(void) {
     M2i m = {
         2, 3, //
         4, 5, //
@@ -576,13 +576,13 @@ i32 Mat_operator_mult_Mat_test(void) {
         6, 7, //
         8, 9, //
     };
-    M2i expected_mmult = {
+    M2i expected_mul_mm = {
         36, 41, //
         64, 73, //
     };
 
-    M2i mmult = m * n;
-    ASSERTZ(mmult == expected_mmult);
+    M2i mul_mm = m * n;
+    ASSERTZ(mul_mm == expected_mul_mm);
 
     return 1;
 }
@@ -774,11 +774,11 @@ i32 sub_v_test(void) {
 i32 mul_vs_test(void) {
     i32 u[] = {2, -3};
     float scalar = 1.5f;
-    float expected_mult[C_ARR_LEN(u)] = {3.0f, -4.5f};
+    float expected_mul_vs[C_ARR_LEN(u)] = {3.0f, -4.5f};
 
-    float mult[C_ARR_LEN(u)];
-    mul_vs(scalar, u, mult, C_ARR_LEN(u));
-    ASSERTZ(eq_v(mult, expected_mult, C_ARR_LEN(u)));
+    float mul_vs_[C_ARR_LEN(u)];
+    mul_vs(scalar, u, mul_vs_, C_ARR_LEN(u));
+    ASSERTZ(eq_v(mul_vs_, expected_mul_vs, C_ARR_LEN(u)));
 
     return 1;
 }
@@ -992,22 +992,22 @@ i32 minor_m_test(void) {
 #undef N_MINOR
 }
 
-i32 vmult_m_test(void) {
+i32 mul_mv_test(void) {
     i32 m[] = {
         4, 5, //
         6, 7, //
     };
     i32 u[C_ARR_LEN(m) >> 1] = {2, 3};
-    i32 expected_vmult[C_ARR_LEN(u)] = {23, 33};
+    i32 expected_mul_mv[C_ARR_LEN(u)] = {23, 33};
 
-    i32 vmult[C_ARR_LEN(u)];
-    vmult_m(m, u, vmult, C_ARR_LEN(u));
-    ASSERTZ(eq_v(vmult, expected_vmult, C_ARR_LEN(u)));
+    i32 mul_mv_[C_ARR_LEN(u)];
+    mul_mv(m, u, mul_mv_, C_ARR_LEN(u));
+    ASSERTZ(eq_v(mul_mv_, expected_mul_mv, C_ARR_LEN(u)));
 
     return 1;
 }
 
-i32 mmult_m_test(void) {
+i32 mul_mm_test(void) {
     i32 m[] = {
         2, 3, //
         4, 5, //
@@ -1016,36 +1016,36 @@ i32 mmult_m_test(void) {
         6, 7, //
         8, 9, //
     };
-    i32 expected_mmult[C_ARR_LEN(m)] = {
+    i32 expected_mul_mm[C_ARR_LEN(m)] = {
         36, 41, //
         64, 73, //
     };
 
     {
-        i32 mmult[C_ARR_LEN(m)];
-        mmult_m<2, i32>(m, n, mmult);
-        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+        i32 mul_mm_[C_ARR_LEN(m)];
+        mul_mm<2, i32>(m, n, mul_mm_);
+        ASSERTZ(eq_v(mul_mm_, expected_mul_mm, C_ARR_LEN(m)));
     }
     {
-        i32 mmult[C_ARR_LEN(m)];
-        mmult_m<2, i32>(m, n, mmult, 1);
-        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+        i32 mul_mm_[C_ARR_LEN(m)];
+        mul_mm<2, i32>(m, n, mul_mm_, 1);
+        ASSERTZ(eq_v(mul_mm_, expected_mul_mm, C_ARR_LEN(m)));
     }
     {
-        i32 mmult[C_ARR_LEN(m)];
-        mmult_m<i32>(m, n, mmult, C_ARR_LEN(m) >> 1, 1);
-        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+        i32 mul_mm_[C_ARR_LEN(m)];
+        mul_mm<i32>(m, n, mul_mm_, C_ARR_LEN(m) >> 1, 1);
+        ASSERTZ(eq_v(mul_mm_, expected_mul_mm, C_ARR_LEN(m)));
     }
     {
-        i32 mmult[C_ARR_LEN(m)];
-        __mmult_m(m, n, mmult, C_ARR_LEN(m) >> 1, 1);
-        ASSERTZ(eq_v(mmult, expected_mmult, C_ARR_LEN(m)));
+        i32 mul_mm_[C_ARR_LEN(m)];
+        __mul_mm(m, n, mul_mm_, C_ARR_LEN(m) >> 1, 1);
+        ASSERTZ(eq_v(mul_mm_, expected_mul_mm, C_ARR_LEN(m)));
     }
 
     return 1;
 }
 
-i32 mmult_m_many_test(void) {
+i32 mul_mm_many_test(void) {
 #define N 2
 #define CNT 3
 
@@ -1077,7 +1077,7 @@ i32 mmult_m_many_test(void) {
             12, 13, //
         },
     };
-    i32 expected_mmult[CNT][N * N] = {
+    i32 expected_mul_mm[CNT][N * N] = {
         {
             36, 41, //
             64, 73, //
@@ -1094,22 +1094,22 @@ i32 mmult_m_many_test(void) {
 
     i32 *m_ptr = (i32 *)m;
     i32 *n_ptr = (i32 *)n;
-    i32 *expected_ptr = (i32 *)expected_mmult;
+    i32 *expected_ptr = (i32 *)expected_mul_mm;
 
     {
-        i32 mmult[CNT][N * N];
-        mmult_m<N, i32>(m_ptr, n_ptr, (i32 *)mmult, CNT);
-        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+        i32 mul_mm_[CNT][N * N];
+        mul_mm<N, i32>(m_ptr, n_ptr, (i32 *)mul_mm_, CNT);
+        ASSERTZ(eq_v((i32 *)mul_mm_, expected_ptr, CNT * N * N));
     }
     {
-        i32 mmult[CNT][N * N];
-        mmult_m<i32>(m_ptr, n_ptr, (i32 *)mmult, N, CNT);
-        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+        i32 mul_mm_[CNT][N * N];
+        mul_mm<i32>(m_ptr, n_ptr, (i32 *)mul_mm_, N, CNT);
+        ASSERTZ(eq_v((i32 *)mul_mm_, expected_ptr, CNT * N * N));
     }
     {
-        i32 mmult[CNT][N * N];
-        __mmult_m(m_ptr, n_ptr, (i32 *)mmult, N, CNT);
-        ASSERTZ(eq_v((i32 *)mmult, expected_ptr, CNT * N * N));
+        i32 mul_mm_[CNT][N * N];
+        __mul_mm(m_ptr, n_ptr, (i32 *)mul_mm_, N, CNT);
+        ASSERTZ(eq_v((i32 *)mul_mm_, expected_ptr, CNT * N * N));
     }
 
     return 1;

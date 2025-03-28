@@ -67,8 +67,8 @@ extern i32 Mat_getp_test(void);
 extern i32 Mat_I_test(void);
 extern i32 Mat_ones_test(void);
 extern i32 Mat_zeros_test(void);
-extern i32 Mat_operator_mult_Arr_test(void);
-extern i32 Mat_operator_mult_Mat_test(void);
+extern i32 Mat_operator_mul_Arr_test(void);
+extern i32 Mat_operator_mul_Mat_test(void);
 extern i32 Mat_operator_eq_test(void);
 extern i32 Mat_operator_mul_test(void);
 extern i32 min_test(void);
@@ -96,9 +96,9 @@ extern i32 trans_m_test(void);
 extern i32 inverse_m_test(void);
 extern i32 cofactor_m_test(void);
 extern i32 minor_m_test(void);
-extern i32 vmult_m_test(void);
-extern i32 mmult_m_test(void);
-extern i32 mmult_m_many_test(void);
+extern i32 mul_mv_test(void);
+extern i32 mul_mm_test(void);
+extern i32 mul_mm_many_test(void);
 
 int main(void) {
 	i32 passed = 0;
@@ -154,8 +154,8 @@ int main(void) {
 	passed += test_function_cb(Mat_I_test, "Mat_I_test");
 	passed += test_function_cb(Mat_ones_test, "Mat_ones_test");
 	passed += test_function_cb(Mat_zeros_test, "Mat_zeros_test");
-	passed += test_function_cb(Mat_operator_mult_Arr_test, "Mat_operator_mult_Arr_test");
-	passed += test_function_cb(Mat_operator_mult_Mat_test, "Mat_operator_mult_Mat_test");
+	passed += test_function_cb(Mat_operator_mul_Arr_test, "Mat_operator_mul_Arr_test");
+	passed += test_function_cb(Mat_operator_mul_Mat_test, "Mat_operator_mul_Mat_test");
 	passed += test_function_cb(Mat_operator_eq_test, "Mat_operator_eq_test");
 	passed += test_function_cb(Mat_operator_mul_test, "Mat_operator_mul_test");
 	passed += test_function_cb(min_test, "min_test");
@@ -183,9 +183,9 @@ int main(void) {
 	passed += test_function_cb(inverse_m_test, "inverse_m_test");
 	passed += test_function_cb(cofactor_m_test, "cofactor_m_test");
 	passed += test_function_cb(minor_m_test, "minor_m_test");
-	passed += test_function_cb(vmult_m_test, "vmult_m_test");
-	passed += test_function_cb(mmult_m_test, "mmult_m_test");
-	passed += test_function_cb(mmult_m_many_test, "mmult_m_many_test");
+	passed += test_function_cb(mul_mv_test, "mul_mv_test");
+	passed += test_function_cb(mul_mm_test, "mul_mm_test");
+	passed += test_function_cb(mul_mm_many_test, "mul_mm_many_test");
 
 	testing_finished_cb(passed, N_TESTS - passed);
 

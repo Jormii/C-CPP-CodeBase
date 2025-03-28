@@ -254,19 +254,19 @@ template <i32 N, typename T>
 void minor_m(i32 i, i32 j, const T *m, T *out);
 
 template <typename T>
-void vmult_m(const T *m, const T *u, T *out, i32 n);
+void mul_mv(const T *m, const T *u, T *out, i32 n);
 
 template <i32 N, typename T>
-void mmult_m(const T *m, const T *a, T *out);
+void mul_mm(const T *m, const T *a, T *out);
 
 template <i32 N, typename T>
-void mmult_m(const T *m, const T *a, T *out, i32 cnt);
+void mul_mm(const T *m, const T *a, T *out, i32 cnt);
 
 template <typename T>
-void mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
+void mul_mm(const T *m, const T *a, T *out, i32 n, i32 cnt);
 
 template <typename T>
-void __mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt);
+void __mul_mm(const T *m, const T *a, T *out, i32 n, i32 cnt);
 
 #pragma endregion
 
@@ -619,18 +619,18 @@ Mat<N, T> Mat<N, T>::zeros() {
 
 template <i32 N, typename T>
 Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
-    Arr<N, T> vmult;
-    vmult_m(ptr, rhs.ptr, vmult.ptr, N);
+    Arr<N, T> mul_mv_;
+    mul_mv(ptr, rhs.ptr, mul_mv_.ptr, N);
 
-    return vmult;
+    return mul_mv_;
 }
 
 template <i32 N, typename T>
 Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
-    Mat mmult;
-    mmult_m<N, T>(ptr, rhs.ptr, mmult.ptr);
+    Mat mul_mm_;
+    mul_mm<N, T>(ptr, rhs.ptr, mul_mm_.ptr);
 
-    return mmult;
+    return mul_mm_;
 }
 
 template <i32 N, typename T>
@@ -948,7 +948,7 @@ void minor_m(i32 i, i32 j, const T *m, T *out) {
 }
 
 template <typename T>
-void vmult_m(const T *m, const T *u, T *out, i32 n) {
+void mul_mv(const T *m, const T *u, T *out, i32 n) {
     MUST(c_arr_check(m, n));
     MUST(c_arr_check(u, n));
     MUST(c_arr_check(out, n));
@@ -959,22 +959,22 @@ void vmult_m(const T *m, const T *u, T *out, i32 n) {
 }
 
 template <i32 N, typename T>
-inline void mmult_m(const T *m, const T *a, T *out) {
-    __mmult_m(m, a, out, N, 1);
+inline void mul_mm(const T *m, const T *a, T *out) {
+    __mul_mm(m, a, out, N, 1);
 }
 
 template <i32 N, typename T>
-void mmult_m(const T *m, const T *a, T *out, i32 cnt) {
-    __mmult_m(m, a, out, N, cnt);
+void mul_mm(const T *m, const T *a, T *out, i32 cnt) {
+    __mul_mm(m, a, out, N, cnt);
 }
 
 template <typename T>
-void mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
-    __mmult_m(m, a, out, n, cnt);
+void mul_mm(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+    __mul_mm(m, a, out, n, cnt);
 }
 
 template <typename T>
-void __mmult_m(const T *m, const T *a, T *out, i32 n, i32 cnt) {
+void __mul_mm(const T *m, const T *a, T *out, i32 n, i32 cnt) {
     MUST(c_arr_check(m, n));
     MUST(c_arr_check(a, n));
     MUST(c_arr_check(out, n));
