@@ -355,6 +355,61 @@ i32 Mat_trans_test(void) {
     return 1;
 }
 
+i32 Mat_minor_test(void) {
+    Mat<3, i32> m = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    Mat<2, i32> expected_minors[C_ARR_LEN(m.ptr)] = {
+        {
+            11, 13, //
+            19, 23, //
+        },
+        {
+            7, 13,  //
+            17, 23, //
+        },
+        {
+            7, 11,  //
+            17, 19, //
+        },
+        {
+            3, 5,   //
+            19, 23, //
+        },
+        {
+            2, 5,   //
+            17, 23, //
+        },
+        {
+            2, 3,   //
+            17, 19, //
+        },
+        {
+            3, 5,   //
+            11, 13, //
+        },
+        {
+            2, 5,  //
+            7, 13, //
+        },
+        {
+            2, 3,  //
+            7, 11, //
+        },
+    };
+
+    for (i32 i = 0, idx = 0; i < m.n(); ++i) {
+        for (i32 j = 0; j < m.n(); ++j, ++idx) {
+            Mat<2, i32> minor = m.minor(i, j);
+            ASSERTZ(minor == expected_minors[idx]);
+        }
+    }
+
+    return 1;
+}
+
 i32 Mat_get_test(void) {
     Mat<2, i32> mat = {
         0, 1, //

@@ -127,6 +127,7 @@ struct Mat {
     i32 n() const;
     i32 len() const;
     Mat trans() const;
+    Mat<N - 1, T> minor(i32 i, i32 j) const;
 
     T &get(i32 row, i32 col);
     const T &get(i32 row, i32 col) const;
@@ -517,6 +518,14 @@ Mat<N, T> Mat<N, T>::trans() const {
     trans_m(ptr, t.ptr, N);
 
     return t;
+}
+
+template <i32 N, typename T>
+Mat<N - 1, T> Mat<N, T>::minor(i32 i, i32 j) const {
+    Mat<N - 1, T> minor;
+    minor_m<N, T>(i, j, ptr, minor.ptr);
+
+    return minor;
 }
 
 template <i32 N, typename T>
