@@ -768,6 +768,25 @@ i32 trans_m_test(void) {
     return 1;
 }
 
+i32 inverse_m_test(void) {
+    i32 m[] = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    float expected_inverse[C_ARR_LEN(m)] = {
+        -1.0f / 13.0f,  -1.0f / 3.0f, 8.0f / 39.0f,  //
+        -10.0f / 13.0f, 1.0f / 2.0f,  -3.0f / 26.0f, //
+        9.0f / 13.0f,   -1.0f / 6.0f, -1.0f / 78.0f, //
+    };
+
+    float inverse[C_ARR_LEN(m)];
+    inverse_m<3, i32>(m, inverse);
+    ASSERTZ(eq_v(inverse, expected_inverse, C_ARR_LEN(m)));
+
+    return 1;
+}
+
 i32 cofactor_m_test(void) {
     i32 m[] = {
         2,  3,  5,  //

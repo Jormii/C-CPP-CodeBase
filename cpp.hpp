@@ -235,6 +235,9 @@ template <typename T>
 void trans_m(const T *m, T *out, i32 n);
 
 template <i32 N, typename T>
+void inverse_m(const T *m, float *out);
+
+template <i32 N, typename T>
 void cofactor_m(const T *m, T *out);
 
 template <i32 N, typename T>
@@ -832,6 +835,22 @@ void trans_m(const T *m, T *out, i32 n) {
             out[j * n + i] = m[i * n + j];
         }
     }
+}
+
+template <i32 N, typename T>
+void inverse_m(const T *m, float *out) {
+    MUST(c_arr_check(m, N));
+    MUST(c_arr_check(out, N));
+
+    T det = det_m<N, T>(m);
+    MUST(!eq(det, 0));
+
+    T adjoint[N * N];
+    T cofactor[N * N];
+
+    cofactor_m<N, T>(m, cofactor);
+    trans_m(cofactor, adjoint, N);
+    mul_vs<float, T>(1.0f / det, adjoint, out, N * N);
 }
 
 template <i32 N, typename T>
