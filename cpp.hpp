@@ -225,6 +225,9 @@ void I_m(T *out, i32 n);
 template <typename T>
 void fill_m(const T &x, T *out, i32 n);
 
+template <i32 N, typename T>
+T det_m(const T *m);
+
 template <typename T>
 void trans_m(const T *m, T *out, i32 n);
 
@@ -772,6 +775,35 @@ void I_m(T *out, i32 n) {
 template <typename T>
 void fill_m(const T &x, T *out, i32 n) {
     fill_v(x, out, n * n);
+}
+
+template <i32 N, typename T>
+T det_m(const T *m) {
+    MUST(c_arr_check(m, N));
+
+    if constexpr (N == 0) {
+        return 1;
+    } else if constexpr (N == 1) {
+        return *m;
+    } else {
+        T det = 0;
+        T minor[(N - 1) * (N - 1)];
+
+        for (i32 i = 0, j = 0; j < N; j += 2) {
+            minor_m<N, T>(i, j, m, minor);
+            T minor_det = det_m<N - 1, T>(minor);
+
+            det += m[j] * minor_det;
+        }
+        for (i32 i = 0, j = 1; j < N; j += 2) {
+            minor_m<N, T>(i, j, m, minor);
+            T minor_det = det_m<N - 1, T>(minor);
+
+            det -= m[j] * minor_det;
+        }
+
+        return det;
+    }
 }
 
 template <typename T>

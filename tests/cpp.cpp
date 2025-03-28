@@ -715,6 +715,30 @@ i32 fill_m_test(void) {
     return 1;
 }
 
+i32 det_m_test(void) {
+    i32 m[] = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    i32 expected_det = -78;
+
+    i32 det = det_m<3, i32>(m);
+    ASSERTZ(det == expected_det);
+
+    return 1;
+}
+
+i32 det_m__0_test(void) {
+    i32 m;
+    i32 expected_det = 1;
+
+    i32 det = det_m<0, i32>(&m);
+    ASSERTZ(det == expected_det);
+
+    return 1;
+}
+
 i32 trans_m_test(void) {
     i32 m[] = {
         0, 1, //
