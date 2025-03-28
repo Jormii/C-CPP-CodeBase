@@ -228,6 +228,9 @@ void fill_m(const T &x, T *out, i32 n);
 template <typename T>
 void trans_m(const T *m, T *out, i32 n);
 
+template <i32 N, typename T>
+void minor_m(i32 i, i32 j, const T *m, T *out);
+
 template <typename T>
 void vmult_m(const T *m, const T *u, T *out, i32 n);
 
@@ -779,6 +782,29 @@ void trans_m(const T *m, T *out, i32 n) {
     for (i32 i = 0; i < n; ++i) {
         for (i32 j = 0; j < n; ++j) {
             out[j * n + i] = m[i * n + j];
+        }
+    }
+}
+
+template <i32 N, typename T>
+void minor_m(i32 i, i32 j, const T *m, T *out) {
+    MUST(c_arr_idx_check(m, N, i));
+    MUST(c_arr_idx_check(m, N, j));
+    MUST(c_arr_check(out, N));
+
+    for (i32 mi = 0; mi < N; ++mi) {
+        if (mi == i) {
+            continue;
+        }
+
+        for (i32 mj = 0; mj < N; ++mj) {
+            if (mj == j) {
+                continue;
+            }
+
+            i32 out_mi = mi - (mi > i);
+            i32 out_mj = mj - (mj > j);
+            out[out_mi * (N - 1) + out_mj] = m[mi * N + mj];
         }
     }
 }

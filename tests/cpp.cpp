@@ -732,6 +732,68 @@ i32 trans_m_test(void) {
     return 1;
 }
 
+i32 minor_m_test(void) {
+#define N 3
+#define N_MINOR 2
+
+    i32 m[N * N] = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    i32 expected_minors[C_ARR_LEN(m)][N_MINOR * N_MINOR] = {
+        {
+            11, 13, //
+            19, 23, //
+        },
+        {
+            7, 13,  //
+            17, 23, //
+        },
+        {
+            7, 11,  //
+            17, 19, //
+        },
+        {
+            3, 5,   //
+            19, 23, //
+        },
+        {
+            2, 5,   //
+            17, 23, //
+        },
+        {
+            2, 3,   //
+            17, 19, //
+        },
+        {
+            3, 5,   //
+            11, 13, //
+        },
+        {
+            2, 5,  //
+            7, 13, //
+        },
+        {
+            2, 3,  //
+            7, 11, //
+        },
+    };
+
+    i32 minor[N_MINOR * N_MINOR];
+    for (i32 i = 0, idx = 0; i < N; ++i) {
+        for (i32 j = 0; j < N; ++j, ++idx) {
+            minor_m<N, i32>(i, j, m, minor);
+            ASSERTZ(eq_v(minor, expected_minors[idx], N_MINOR * N_MINOR));
+        }
+    }
+
+    return 1;
+
+#undef N
+#undef N_MINOR
+}
+
 i32 vmult_m_test(void) {
     i32 m[] = {
         4, 5, //
