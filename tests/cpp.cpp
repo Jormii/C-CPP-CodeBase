@@ -369,6 +369,24 @@ i32 Mat_trans_test(void) {
     return 1;
 }
 
+i32 Mat_cofactor_test(void) {
+    Mat<3, i32> m = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    Mat<3, i32> expected_cofactor = {
+        6,   60,  -54, //
+        26,  -39, 13,  //
+        -16, 9,   1,   //
+    };
+
+    Mat<3, i32> cofactor = m.cofactor();
+    ASSERTZ(cofactor == expected_cofactor);
+
+    return 1;
+}
+
 i32 Mat_minor_test(void) {
     Mat<3, i32> m = {
         2,  3,  5,  //

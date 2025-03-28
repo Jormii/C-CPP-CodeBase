@@ -129,6 +129,7 @@ struct Mat {
 
     T det() const;
     Mat trans() const;
+    Mat cofactor() const;
     Mat<N - 1, T> minor(i32 i, i32 j) const;
 
     T &get(i32 row, i32 col);
@@ -525,6 +526,14 @@ Mat<N, T> Mat<N, T>::trans() const {
     trans_m(ptr, t.ptr, N);
 
     return t;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::cofactor() const {
+    Mat cofactor;
+    cofactor_m<N, T>(ptr, cofactor.ptr);
+
+    return cofactor;
 }
 
 template <i32 N, typename T>
