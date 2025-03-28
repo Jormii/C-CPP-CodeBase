@@ -369,6 +369,24 @@ i32 Mat_trans_test(void) {
     return 1;
 }
 
+i32 Mat_inverse_test(void) {
+    Mat<3, i32> m = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    Mat<3, float> expected_inverse = {
+        -1.0f / 13.0f,  -1.0f / 3.0f, 8.0f / 39.0f,  //
+        -10.0f / 13.0f, 1.0f / 2.0f,  -3.0f / 26.0f, //
+        9.0f / 13.0f,   -1.0f / 6.0f, -1.0f / 78.0f, //
+    };
+
+    Mat<3, float> inverse = m.inverse();
+    ASSERTZ(inverse == expected_inverse);
+
+    return 1;
+}
+
 i32 Mat_cofactor_test(void) {
     Mat<3, i32> m = {
         2,  3,  5,  //

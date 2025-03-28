@@ -129,6 +129,7 @@ struct Mat {
 
     T det() const;
     Mat trans() const;
+    Mat<N, float> inverse() const;
     Mat cofactor() const;
     Mat<N - 1, T> minor(i32 i, i32 j) const;
 
@@ -526,6 +527,14 @@ Mat<N, T> Mat<N, T>::trans() const {
     trans_m(ptr, t.ptr, N);
 
     return t;
+}
+
+template <i32 N, typename T>
+Mat<N, float> Mat<N, T>::inverse() const {
+    Mat<N, float> inverse;
+    inverse_m<N, T>(ptr, inverse.ptr);
+
+    return inverse;
 }
 
 template <i32 N, typename T>
