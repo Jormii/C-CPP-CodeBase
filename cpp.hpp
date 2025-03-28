@@ -126,6 +126,8 @@ struct Mat {
 
     i32 n() const;
     i32 len() const;
+
+    T det() const;
     Mat trans() const;
     Mat<N - 1, T> minor(i32 i, i32 j) const;
 
@@ -510,6 +512,11 @@ i32 Mat<N, T>::n() const {
 template <i32 N, typename T>
 i32 Mat<N, T>::len() const {
     return N * N;
+}
+
+template <i32 N, typename T>
+T Mat<N, T>::det() const {
+    return det_m<N, T>(ptr);
 }
 
 template <i32 N, typename T>

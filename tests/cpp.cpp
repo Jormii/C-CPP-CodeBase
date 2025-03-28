@@ -339,6 +339,20 @@ i32 Mat_len_test(void) {
     return 1;
 }
 
+i32 Mat_det_test(void) {
+    Mat<3, i32> m = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    i32 expected_det = -78;
+
+    i32 det = m.det();
+    ASSERTZ(det == expected_det);
+
+    return 1;
+}
+
 i32 Mat_trans_test(void) {
     M2i mat = {
         0, 1, //
