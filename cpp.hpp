@@ -895,7 +895,7 @@ void inverse_m(const T *m, float *out) {
     MUST(c_arr_check(out, N));
 
     T det = det_m<N, T>(m);
-    MUST(!eq(det, 0));
+    MUST(!eq(det, (T)0));
 
     T adjoint[N * N];
     T cofactor[N * N];
