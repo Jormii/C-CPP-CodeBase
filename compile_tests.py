@@ -119,7 +119,7 @@ def get_signatures(files: List[str]) -> Dict[str, List[str]]:
     if len(collisions) != 0:
         INDENT = 2 * " "
 
-        print("{ERROR_ESC}X{END_ESC} Signature collisions found")
+        print(f"{ERROR_ESC}X{END_ESC} Signature collisions found")
 
         for signature, collision_files in collisions.items():
             print(f"{INDENT}- {signature}")
