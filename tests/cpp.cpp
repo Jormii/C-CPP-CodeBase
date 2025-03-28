@@ -208,10 +208,10 @@ i32 Arr_cross_test(void) {
 }
 
 i32 Arr_mix_test(void) {
-    V2i u = {2, 3};
-    V2i v = {8, 17};
-    float t = 0.5f;
-    V2f expected_mix = {5, 10};
+    V2i u = {2, 4};
+    V2i v = {8, 18};
+    float t = 0.4f;
+    V2f expected_mix = {4.4f, 9.6f};
 
     V2f mix = V2i::mix(u, v, t);
     ASSERTZ(mix == expected_mix);
@@ -796,10 +796,10 @@ i32 div_vs_test(void) {
 }
 
 i32 mix_v_test(void) {
-    i32 u[] = {2, 3};
-    i32 v[C_ARR_LEN(u)] = {8, 17};
-    float t = 0.5f;
-    float expected_mix[C_ARR_LEN(u)] = {5, 10};
+    i32 u[] = {2, 4};
+    i32 v[C_ARR_LEN(u)] = {8, 18};
+    float t = 0.4f;
+    float expected_mix[C_ARR_LEN(u)] = {4.4f, 9.6f};
 
     float mix[C_ARR_LEN(u)];
     mix_v(u, v, t, mix, C_ARR_LEN(u));
@@ -866,7 +866,7 @@ i32 det_m_test(void) {
 }
 
 i32 det_m__0_test(void) {
-    i32 m;
+    i32 m = 0;
     i32 expected_det = 1;
 
     i32 det = det_m<0, i32>(&m);
