@@ -504,6 +504,25 @@ i32 Mat_operator_eq_test(void) {
     return 1;
 }
 
+i32 Mat_operator_mul_test(void) {
+    float scalar = 1.5f;
+    Mat<2, i32> m = {
+        2, -3, //
+        -4, 5, //
+    };
+    Mat<2, float> expected_mul{
+        3.0f, -4.5f, //
+        -6.0f, 7.5f, //
+    };
+
+    Mat<2, float> sm = scalar * m;
+    Mat<2, float> ms = m * scalar;
+    ASSERTZ(sm == expected_mul);
+    ASSERTZ(ms == expected_mul);
+
+    return 1;
+}
+
 // cpp.hpp::(Functions)
 i32 min_test(void) {
     i32 a = 1;

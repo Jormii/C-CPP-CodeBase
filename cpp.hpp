@@ -143,6 +143,11 @@ struct Mat {
     Mat operator*(const Mat &rhs) const;
     bool operator==(const Mat &rhs) const;
 };
+template <typename R, i32 N, typename T>
+Mat<N, R> operator*(const R &lhs, const Mat<N, T> &rhs);
+
+template <i32 N, typename T, typename R>
+Mat<N, R> operator*(const Mat<N, T> &lhs, const R &rhs);
 
 using M2i = Mat<2, i32>;
 using M2f = Mat<2, float>;
@@ -597,6 +602,19 @@ Mat<N, T> Mat<N, T>::operator*(const Mat &rhs) const {
 template <i32 N, typename T>
 bool Mat<N, T>::operator==(const Mat &rhs) const {
     return eq_v(ptr, rhs.ptr, N);
+}
+
+template <typename R, i32 N, typename T>
+Mat<N, R> operator*(const R &lhs, const Mat<N, T> &rhs) {
+    Mat<N, R> mul_ms;
+    mul_vs(lhs, rhs.ptr, mul_ms.ptr, N * N);
+
+    return mul_ms;
+}
+
+template <i32 N, typename T, typename R>
+Mat<N, R> operator*(const Mat<N, T> &lhs, const R &rhs) {
+    return rhs * lhs;
 }
 
 template <typename T>
