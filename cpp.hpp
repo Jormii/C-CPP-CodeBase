@@ -232,6 +232,9 @@ template <typename T>
 void trans_m(const T *m, T *out, i32 n);
 
 template <i32 N, typename T>
+void cofactor_m(const T *m, T *out);
+
+template <i32 N, typename T>
 void minor_m(i32 i, i32 j, const T *m, T *out);
 
 template <typename T>
@@ -814,6 +817,25 @@ void trans_m(const T *m, T *out, i32 n) {
     for (i32 i = 0; i < n; ++i) {
         for (i32 j = 0; j < n; ++j) {
             out[j * n + i] = m[i * n + j];
+        }
+    }
+}
+
+template <i32 N, typename T>
+void cofactor_m(const T *m, T *out) {
+    MUST(c_arr_check(m, N));
+    MUST(c_arr_check(out, N));
+
+    T pos = 1;
+    T neg = -1;
+    T minor[(N - 1) * (N - 1)];
+    for (i32 i = 0, idx = 0; i < N; ++i) {
+        for (i32 j = 0; j < N; ++j, ++idx) {
+            minor_m<N, T>(i, j, m, minor);
+            T minor_det = det_m<N - 1, T>(minor);
+
+            out[idx] = pos * minor_det; // {pos} === sign
+            SWAP(pos, neg);
         }
     }
 }

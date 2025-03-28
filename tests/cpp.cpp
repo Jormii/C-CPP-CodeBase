@@ -750,8 +750,27 @@ i32 trans_m_test(void) {
     };
 
     i32 trans[C_ARR_LEN(m)];
-    trans_m(m, trans, C_ARR_LEN(m) >> 1);
+    trans_m(m, trans, C_ARR_LEN(m) >> 1); // TODO: >> is coincidentally correct
     ASSERTZ(eq_v(trans, expected_trans, C_ARR_LEN(m)));
+
+    return 1;
+}
+
+i32 cofactor_m_test(void) {
+    i32 m[] = {
+        2,  3,  5,  //
+        7,  11, 13, //
+        17, 19, 23, //
+    };
+    i32 expected_cofactor[C_ARR_LEN(m)] = {
+        6,   60,  -54, //
+        26,  -39, 13,  //
+        -16, 9,   1,   //
+    };
+
+    i32 cofactor[C_ARR_LEN(m)];
+    cofactor_m<3, i32>(m, cofactor);
+    ASSERTZ(eq_v(cofactor, expected_cofactor, C_ARR_LEN(m)));
 
     return 1;
 }
