@@ -647,6 +647,18 @@ i32 sub_v_test(void) {
     return 1;
 }
 
+i32 mul_vs_test(void) {
+    i32 u[] = {2, -3};
+    float scalar = 1.5f;
+    float expected_mult[C_ARR_LEN(u)] = {3.0f, -4.5f};
+
+    float mult[C_ARR_LEN(u)];
+    mul_vs(scalar, u, mult, C_ARR_LEN(u));
+    ASSERTZ(eq_v(mult, expected_mult, C_ARR_LEN(u)));
+
+    return 1;
+}
+
 i32 div_vs_test(void) {
     i32 u[] = {2, -3};
     i32 scalar = 2;

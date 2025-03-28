@@ -206,6 +206,9 @@ i32 eq_v(const T *u, const T *v, i32 len);
 template <typename T>
 void sub_v(const T *u, const T *v, T *out, i32 len);
 
+template <typename V, typename T>
+void mul_vs(const V &s, const T *u, V *out, i32 len);
+
 template <typename T>
 void div_vs(const T *u, const T &s, float *out, i32 len);
 
@@ -717,6 +720,16 @@ void sub_v(const T *u, const T *v, T *out, i32 len) {
 
     for (i32 i = 0; i < len; ++i) {
         out[i] = u[i] - v[i];
+    }
+}
+
+template <typename V, typename T>
+void mul_vs(const V &s, const T *u, V *out, i32 len) {
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(out, len));
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = s * (V)u[i];
     }
 }
 
