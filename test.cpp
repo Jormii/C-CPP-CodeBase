@@ -31,6 +31,7 @@ extern i32 c_arr_idx_check_test(void);
 // From ./tests/cpp.cpp
 extern i32 SWAP_test(void);
 extern i32 Buf_end_test(void);
+extern i32 Buf_operator_indirect_test(void);
 extern i32 Buf_operator_subscript_test(void);
 extern i32 Buf_operator_add_test(void);
 extern i32 Arr_len_test(void);
@@ -102,7 +103,7 @@ extern i32 mul_mm_many_test(void);
 
 int main(void) {
 	i32 passed = 0;
-	const i32 N_TESTS = 77;
+	const i32 N_TESTS = 78;
 
 	testing_started_cb();
 
@@ -118,6 +119,7 @@ int main(void) {
 	test_file_cb("./tests/cpp.cpp");
 	passed += test_function_cb(SWAP_test, "SWAP_test");
 	passed += test_function_cb(Buf_end_test, "Buf_end_test");
+	passed += test_function_cb(Buf_operator_indirect_test, "Buf_operator_indirect_test");
 	passed += test_function_cb(Buf_operator_subscript_test, "Buf_operator_subscript_test");
 	passed += test_function_cb(Buf_operator_add_test, "Buf_operator_add_test");
 	passed += test_function_cb(Arr_len_test, "Arr_len_test");
