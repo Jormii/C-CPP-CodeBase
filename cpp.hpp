@@ -39,6 +39,8 @@ struct Buf {
     T *end();
     const T *end() const;
 
+    T &operator*();
+    const T &operator*() const;
     T &operator[](i32 idx);
     const T &operator[](i32 idx) const;
     T *operator+(i32 idx);
@@ -286,6 +288,17 @@ template <typename T>
 const T *Buf<T>::end() const {
     MUST(c_arr_check(ptr, len));
     return ptr + len;
+}
+
+template <typename T>
+T &Buf<T>::operator*() {
+    return CONST_CAST(T &, operator*);
+}
+
+template <typename T>
+const T &Buf<T>::operator*() const {
+    MUST(c_arr_check(ptr, len));
+    return *ptr;
 }
 
 template <typename T>

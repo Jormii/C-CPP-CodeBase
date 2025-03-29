@@ -30,6 +30,23 @@ i32 Buf_end_test(void) {
     return 1;
 }
 
+i32 Buf_operator_indirect_test(void) {
+    i32 arr[] = {1, 2, 3};
+
+    Buf<i32> buf = BUF_FROM_C_ARR(arr);
+    const Buf<i32> buf_const = BUF_FROM_C_ARR(arr);
+
+    i32 &p = *buf;
+    const i32 &pc = *buf;
+    const i32 &pc_const = *buf_const;
+
+    ASSERTZ(p == arr[0]);
+    ASSERTZ(pc == arr[0]);
+    ASSERTZ(pc_const == arr[0]);
+
+    return 1;
+}
+
 i32 Buf_operator_subscript_test(void) {
     i32 arr[] = {1, 2, 3};
 
