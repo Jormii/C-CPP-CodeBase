@@ -818,6 +818,18 @@ i32 eq_v_test(void) {
     return 1;
 }
 
+i32 add_v_test(void) {
+    i32 u[] = {2, 3};
+    i32 v[C_ARR_LEN(u)] = {4, 9};
+    i32 expected_add[C_ARR_LEN(u)] = {6, 12};
+
+    i32 add[C_ARR_LEN(u)];
+    add_v(u, v, add, C_ARR_LEN(u));
+    ASSERTZ(eq_v(add, expected_add, C_ARR_LEN(u)));
+
+    return 1;
+}
+
 i32 sub_v_test(void) {
     i32 u[] = {2, 3};
     i32 v[C_ARR_LEN(u)] = {4, 9};

@@ -225,6 +225,9 @@ template <typename T>
 i32 eq_v(const T *u, const T *v, i32 len);
 
 template <typename T>
+void add_v(const T *u, const T *v, T *out, i32 len);
+
+template <typename T>
 void sub_v(const T *u, const T *v, T *out, i32 len);
 
 template <typename V, typename T>
@@ -819,6 +822,17 @@ i32 eq_v(const T *u, const T *v, i32 len) {
     }
 
     return eq_;
+}
+
+template <typename T>
+void add_v(const T *u, const T *v, T *out, i32 len) {
+    MUST(c_arr_check(u, len));
+    MUST(c_arr_check(v, len));
+    MUST(c_arr_check(out, len));
+
+    for (i32 i = 0; i < len; ++i) {
+        out[i] = u[i] + v[i];
+    }
 }
 
 template <typename T>
