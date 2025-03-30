@@ -98,6 +98,11 @@ struct Arr {
     Arr operator-(const Arr &rhs) const;
     bool operator==(const Arr &rhs) const;
 };
+template <typename R, i32 N, typename T>
+Arr<N, R> operator*(const R &lhs, const Arr<N, T> &rhs);
+
+template <i32 N, typename T, typename R>
+Arr<N, R> operator*(const Arr<N, T> &lhs, const R &rhs);
 
 using V2i = Arr<2, i32>;
 using V2f = Arr<2, float>;
@@ -524,6 +529,19 @@ Arr<N, T> Arr<N, T>::operator-(const Arr &rhs) const {
 template <i32 N, typename T>
 bool Arr<N, T>::operator==(const Arr &rhs) const {
     return eq_v(ptr, rhs.ptr, N);
+}
+
+template <typename R, i32 N, typename T>
+Arr<N, R> operator*(const R &lhs, const Arr<N, T> &rhs) {
+    Arr<N, R> mul_vs_;
+    mul_vs(lhs, rhs.ptr, mul_vs_.ptr, N);
+
+    return mul_vs_;
+}
+
+template <i32 N, typename T, typename R>
+Arr<N, R> operator*(const Arr<N, T> &lhs, const R &rhs) {
+    return rhs * lhs;
 }
 
 template <i32 N, typename T>

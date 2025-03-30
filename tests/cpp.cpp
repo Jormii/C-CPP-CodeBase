@@ -346,6 +346,19 @@ i32 Arr_operator_eq_test(void) {
     return 1;
 }
 
+i32 Arr_operator_mul_test(void) {
+    V2i u = {2, -3};
+    float scalar = 1.5f;
+    V2f expected_mul = {3.0f, -4.5f};
+
+    V2f su = scalar * u;
+    V2f us = u * scalar;
+    ASSERTZ(su == expected_mul);
+    ASSERTZ(us == expected_mul);
+
+    return 1;
+}
+
 // cpp.hpp::Mat
 i32 Mat_n_test(void) {
     Mat<2, i32> mat = {
