@@ -93,6 +93,7 @@ struct Arr {
     const T *operator+(i32 idx) const;
 
     Arr operator-() const;
+    Arr &operator+=(const Arr &rhs);
     Arr<N, float> operator/(const T &rhs) const;
     Arr operator-(const Arr &rhs) const;
     bool operator==(const Arr &rhs) const;
@@ -496,6 +497,12 @@ Arr<N, T> Arr<N, T>::operator-() const {
     neg_v(ptr, neg.ptr, N);
 
     return neg;
+}
+
+template <i32 N, typename T>
+Arr<N, T> &Arr<N, T>::operator+=(const Arr &rhs) {
+    add_v(ptr, rhs.ptr, ptr, N);
+    return *this;
 }
 
 template <i32 N, typename T>

@@ -300,6 +300,17 @@ i32 Arr_operator_neg_test(void) {
     return 1;
 }
 
+i32 Arr_operator_add_assign_test(void) {
+    V2i u = {2, -3};
+    V2i v = {-4, 16};
+    V2i expected_add = {-2, 13};
+
+    u += v;
+    ASSERTZ(u == expected_add);
+
+    return 1;
+}
+
 i32 Arr_operator_div_test(void) {
     V2i u = {2, -3};
     i32 scalar = 2;
