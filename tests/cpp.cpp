@@ -694,6 +694,22 @@ i32 max_test(void) {
     return 1;
 }
 
+i32 clamp_test(void) {
+    i32 a = 0;
+    i32 b = 10;
+    i32 mid = (b - a) / 2;
+
+    i32 clamp_a = clamp(a - 1, a, b);
+    i32 clamp_mid = clamp(mid, a, b);
+    i32 clamp_b = clamp(b + 1, a, b);
+
+    ASSERTZ(clamp_a == a);
+    ASSERTZ(clamp_mid == mid);
+    ASSERTZ(clamp_b == b);
+
+    return 1;
+}
+
 i32 eq_test(void) {
     ASSERTZ(eq(2, 2));
     ASSERTZ(!eq(2, 3));

@@ -195,6 +195,9 @@ template <typename T>
 T max(const T &x, const T &y);
 
 template <typename T>
+T clamp(const T &x, const T &a, const T &b);
+
+template <typename T>
 i32 eq(const T &x, const T &y);
 
 template <typename T, typename V>
@@ -697,6 +700,19 @@ T min(const T &x, const T &y) {
 template <typename T>
 T max(const T &x, const T &y) {
     return (x > y) ? x : y;
+}
+
+template <typename T>
+T clamp(const T &x, const T &a, const T &b) {
+    MUST(a <= b);
+
+    if (x <= a) {
+        return a;
+    } else if (x >= b) {
+        return b;
+    } else {
+        return x;
+    }
 }
 
 template <typename T>
