@@ -930,16 +930,14 @@ void cofactor_m(const T *m, T *out) {
     MUST(c_arr_check(m, N));
     MUST(c_arr_check(out, N));
 
-    T pos = 1;
-    T neg = -1;
     T minor[(N - 1) * (N - 1)];
     for (i32 i = 0, idx = 0; i < N; ++i) {
         for (i32 j = 0; j < N; ++j, ++idx) {
             minor_m<N, T>(i, j, m, minor);
             T minor_det = det_m<N - 1, T>(minor);
 
-            out[idx] = pos * minor_det; // {pos} === sign
-            SWAP(pos, neg);
+            i32 sign = ((i + j) & 1) ? -1 : 1;
+            out[idx] = sign * minor_det;
         }
     }
 }

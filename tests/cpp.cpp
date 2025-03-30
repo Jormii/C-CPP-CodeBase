@@ -416,18 +416,20 @@ i32 Mat_inverse_test(void) {
 }
 
 i32 Mat_cofactor_test(void) {
-    Mat<3, i32> m = {
-        2,  3,  5,  //
-        7,  11, 13, //
-        17, 19, 23, //
+    Mat<4, i32> m = {
+        2,  3,  5,  7,  //
+        11, 13, 17, 19, //
+        23, 29, 31, 37, //
+        41, 43, 47, 53, //
     };
-    Mat<3, i32> expected_cofactor = {
-        6,   60,  -54, //
-        26,  -39, 13,  //
-        -16, 9,   1,   //
+    Mat<4, i32> expected_cofactor = {
+        240,  -400, -520, 600,  //
+        -192, -32,  614,  -370, //
+        -176, 264,  -88,  0,    //
+        160,  -120, -90,  70,   //
     };
 
-    Mat<3, i32> cofactor = m.cofactor();
+    Mat<4, i32> cofactor = m.cofactor();
     ASSERTZ(cofactor == expected_cofactor);
 
     return 1;
@@ -941,18 +943,20 @@ i32 inverse_m_test(void) {
 
 i32 cofactor_m_test(void) {
     i32 m[] = {
-        2,  3,  5,  //
-        7,  11, 13, //
-        17, 19, 23, //
+        2,  3,  5,  7,  //
+        11, 13, 17, 19, //
+        23, 29, 31, 37, //
+        41, 43, 47, 53, //
     };
     i32 expected_cofactor[C_ARR_LEN(m)] = {
-        6,   60,  -54, //
-        26,  -39, 13,  //
-        -16, 9,   1,   //
+        240,  -400, -520, 600,  //
+        -192, -32,  614,  -370, //
+        -176, 264,  -88,  0,    //
+        160,  -120, -90,  70,   //
     };
 
     i32 cofactor[C_ARR_LEN(m)];
-    cofactor_m<3, i32>(m, cofactor);
+    cofactor_m<4, i32>(m, cofactor);
     ASSERTZ(eq_v(cofactor, expected_cofactor, C_ARR_LEN(m)));
 
     return 1;
