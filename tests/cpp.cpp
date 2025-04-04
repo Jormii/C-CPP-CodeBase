@@ -359,6 +359,27 @@ i32 Arr_operator_mul_test(void) {
     return 1;
 }
 
+// cpp.hpp::Arr2D
+i32 Arr2D_rows_test(void) {
+    Arr2D<2, 3, i32> arr = {
+        2, 3, 4, //
+        5, 6, 7, //
+    };
+    ASSERTZ(arr.rows() == 2);
+
+    return 1;
+}
+
+i32 Arr2D_cols_test(void) {
+    Arr2D<2, 3, i32> arr = {
+        2, 3, 4, //
+        5, 6, 7, //
+    };
+    ASSERTZ(arr.cols() == 3);
+
+    return 1;
+}
+
 // cpp.hpp::Mat
 i32 Mat_n_test(void) {
     Mat<2, i32> mat = {

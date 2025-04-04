@@ -126,6 +126,18 @@ static_assert(sizeof(V2<i32>) == (2 * sizeof(i32)));
 static_assert(sizeof(V3<i32>) == (3 * sizeof(i32)));
 static_assert(sizeof(V4<i32>) == (4 * sizeof(i32)));
 
+template <i32 R, i32 C, typename T>
+struct Arr2D {
+    static_assert(R > 0);
+    static_assert(C > 0);
+
+    T ptr[R * C];
+
+    i32 rows() const;
+    i32 cols() const;
+
+};
+
 template <i32 N, typename T>
 struct Mat {
     static_assert(N > 0);
