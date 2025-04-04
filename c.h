@@ -60,6 +60,7 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 i32 c_arr_check(const void *ptr, i32 len) NODISCARD;
 i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx) NODISCARD;
 
+i32 c_arr_2d_idx(i32 cols, i32 row, i32 col);
 i32 c_arr_2d_idx_check( //
     const void *ptr, i32 rows, i32 cols, i32 row, i32 col) NODISCARD;
 

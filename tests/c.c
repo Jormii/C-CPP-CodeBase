@@ -85,6 +85,17 @@ i32 c_arr_idx_check_test(void) {
 
     return 1;
 }
+
+i32 c_arr_2d_idx_test(void) {
+    i32 cols = 3;
+    ASSERTZ(c_arr_2d_idx(cols, 0, 0) == 0);
+    ASSERTZ(c_arr_2d_idx(cols, 2, 0) == 6);
+    ASSERTZ(c_arr_2d_idx(cols, 0, 2) == 2);
+    ASSERTZ(c_arr_2d_idx(cols, 2, 2) == 8);
+
+    return 1;
+}
+
 i32 c_arr_2d_idx_check_test(void) {
     i32 val = 0;
     i32 rows = 1;

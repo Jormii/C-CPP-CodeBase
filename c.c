@@ -9,6 +9,14 @@ i32 c_arr_idx_check(const void *ptr, i32 len, i32 idx) {
     return c_arr_check(ptr, len) && idx >= 0 && idx < len;
 }
 
+i32 c_arr_2d_idx(i32 cols, i32 row, i32 col) {
+    MUST(row >= 0);
+    MUST(col >= 0);
+
+    i32 idx = (row * cols) + col;
+    return idx;
+}
+
 i32 c_arr_2d_idx_check(const void *ptr, i32 rows, i32 cols, i32 row, i32 col) {
     return c_arr_idx_check(ptr, rows, row) && c_arr_idx_check(ptr, cols, col);
 }
