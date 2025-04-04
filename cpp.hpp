@@ -49,6 +49,18 @@ struct Buf {
 
 #define BUF_FROM_C_ARR(c_arr) {c_arr, C_ARR_LEN(c_arr)}
 
+template <typename T>
+struct Buf2D {
+    T *ptr;
+    i32 rows;
+    i32 cols;
+
+    Buf2D(T *ptr, i32 rows, i32 cols);
+
+    T &get(i32 row, i32 col);
+    const T &get(i32 row, i32 col) const;
+};
+
 template <i32 N, typename T>
 struct Arr {
     static_assert(N > 0);
@@ -346,6 +358,24 @@ const T *Buf<T>::operator+(i32 idx) const {
     MUST(c_arr_idx_check(ptr, len, idx));
     return ptr + idx;
 }
+
+template <typename T>
+Buf2D<T>::Buf2D(T *ptr, i32 rows, i32 cols) : ptr{ptr}, rows{rows}, cols{cols} {
+    MUST(c_arr_2d_check(ptr, rows, cols));
+}
+
+template <typename T>
+T &Buf2D<T>::get(i32 row, i32 col) {
+    return CONST_CAST(T &, get, row, col);
+};
+
+template <typename T>
+const T &Buf2D<T>::get(i32 row, i32 col) const {
+    MUST(c_arr_2d_idx_check(ptr, rows, cols, row, col));
+
+    i32 idx = c_arr_2d_idx(cols, row, col);
+    return ptr[idx];
+};
 
 template <i32 N, typename T>
 i32 Arr<N, T>::len() const {
