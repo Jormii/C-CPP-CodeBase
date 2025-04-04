@@ -51,6 +51,8 @@ extern void assert_cb(const char *expr, const char *file, i32 line);
 #define C_ARR_LEN(c_arr)                                                       \
     (((c_arr) == NULL) ? 0 : sizeof((c_arr)) / sizeof(*(c_arr)))
 
+#define MEMBER_OFFSET(STRUCT, MEMBER) ((size_t)(&(((STRUCT *)0)->MEMBER)))
+
 #pragma endregion
 
 #pragma region function

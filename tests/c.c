@@ -54,6 +54,19 @@ i32 C_ARR_LEN_arg_ptr_test(void) {
     return 1;
 }
 
+typedef struct __Struct_st {
+    u8 byte;
+    int64_t integer;
+} __Struct;
+
+i32 MEMBER_OFFSET_test(void) {
+    ASSERTZ(MEMBER_OFFSET(__Struct, byte) == 0);
+    ASSERTZ(MEMBER_OFFSET(__Struct, integer) != sizeof(u8));
+    ASSERTZ(MEMBER_OFFSET(__Struct, integer) == sizeof(int64_t));
+
+    return 1;
+}
+
 // c.h::(Functions)
 i32 c_arr_check_test(void) {
     i32 val = 0;
