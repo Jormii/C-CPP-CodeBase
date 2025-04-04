@@ -592,6 +592,16 @@ Arr<N, R> operator*(const Arr<N, T> &lhs, const R &rhs) {
     return rhs * lhs;
 }
 
+template <i32 R, i32 C, typename T>
+i32 Arr2D<R, C, T>::rows() const {
+    return R;
+}
+
+template <i32 R, i32 C, typename T>
+i32 Arr2D<R, C, T>::cols() const {
+    return C;
+}
+
 template <i32 N, typename T>
 i32 Mat<N, T>::n() const {
     return N;
