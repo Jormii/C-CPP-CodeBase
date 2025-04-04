@@ -96,6 +96,16 @@ i32 c_arr_2d_idx_test(void) {
     return 1;
 }
 
+i32 c_arr_2d_check_test(void) {
+    i32 val = 0;
+    ASSERTZ(c_arr_2d_check(NULL, 0, 0) == 0);
+    ASSERTZ(c_arr_2d_check(&val, -1, 0) == 0);
+    ASSERTZ(c_arr_2d_check(&val, 0, -1) == 0);
+    ASSERTZ(c_arr_2d_check(&val, -1, -1) == 0);
+
+    return 1;
+}
+
 i32 c_arr_2d_idx_check_test(void) {
     i32 val = 0;
     i32 rows = 1;

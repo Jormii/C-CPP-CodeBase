@@ -17,8 +17,13 @@ i32 c_arr_2d_idx(i32 cols, i32 row, i32 col) {
     return idx;
 }
 
+i32 c_arr_2d_check(const void *ptr, i32 rows, i32 cols) {
+    return ptr != NULL && rows >= 0 && cols >= 0;
+}
+
 i32 c_arr_2d_idx_check(const void *ptr, i32 rows, i32 cols, i32 row, i32 col) {
-    return c_arr_idx_check(ptr, rows, row) && c_arr_idx_check(ptr, cols, col);
+    return c_arr_2d_check(ptr, rows, cols) //
+           && row >= 0 && row < rows && col >= 0 && col < cols;
 }
 
 #ifdef NDEBUG
