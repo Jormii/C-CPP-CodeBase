@@ -78,8 +78,9 @@ i32 c_arr_check_test(void) {
 
 i32 c_arr_idx_check_test(void) {
     i32 val = 0;
-    i32 len = 0;
-    ASSERTZ(c_arr_idx_check(NULL, len, -1) == 0);
+    i32 len = 1;
+    ASSERTZ(c_arr_idx_check(NULL, len, 0) == 0);
+    ASSERTZ(c_arr_idx_check(&val, len, -1) == 0);
     ASSERTZ(c_arr_idx_check(&val, len, len + 1) == 0);
 
     return 1;
