@@ -410,6 +410,29 @@ i32 Arr2D_cols_test(void) {
     return 1;
 }
 
+i32 Arr2D_buf2d_test(void) {
+    Arr2D<2, 3, i32> arr = {
+        2, 3, 4, //
+        5, 6, 7, //
+    };
+    const Arr2D<2, 3, i32> arr_const = {
+        2, 3, 4, //
+        5, 6, 7, //
+    };
+
+    Buf2D buf = arr.buf2d();
+    ASSERTZ(buf.ptr == arr.ptr);
+    ASSERTZ(buf.rows == arr.rows());
+    ASSERTZ(buf.cols == arr.cols());
+
+    const Buf2D buf_const = arr_const.buf2d();
+    ASSERTZ(buf_const.ptr == arr_const.ptr);
+    ASSERTZ(buf_const.rows == arr_const.rows());
+    ASSERTZ(buf_const.cols == arr_const.cols());
+
+    return 1;
+}
+
 // cpp.hpp::Mat
 i32 Mat_n_test(void) {
     Mat<2, i32> mat = {

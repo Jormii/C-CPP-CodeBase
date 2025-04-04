@@ -148,6 +148,8 @@ struct Arr2D {
     i32 rows() const;
     i32 cols() const;
 
+    Buf2D<T> buf2d();
+    const Buf2D<T> buf2d() const;
 };
 
 template <i32 N, typename T>
@@ -600,6 +602,16 @@ i32 Arr2D<R, C, T>::rows() const {
 template <i32 R, i32 C, typename T>
 i32 Arr2D<R, C, T>::cols() const {
     return C;
+}
+
+template <i32 R, i32 C, typename T>
+Buf2D<T> Arr2D<R, C, T>::buf2d() {
+    return {(T *)ptr, R, C}; // TODO: CONST_CAST not working
+}
+
+template <i32 R, i32 C, typename T>
+const Buf2D<T> Arr2D<R, C, T>::buf2d() const {
+    return {(T *)ptr, R, C};
 }
 
 template <i32 N, typename T>
