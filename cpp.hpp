@@ -57,6 +57,8 @@ struct Buf2D {
 
     Buf2D(T *ptr, i32 rows, i32 cols);
 
+    i32 len() const;
+
     T &get(i32 row, i32 col);
     const T &get(i32 row, i32 col) const;
 };
@@ -364,6 +366,12 @@ const T *Buf<T>::operator+(i32 idx) const {
 template <typename T>
 Buf2D<T>::Buf2D(T *ptr, i32 rows, i32 cols) : ptr{ptr}, rows{rows}, cols{cols} {
     MUST(c_arr_2d_check(ptr, rows, cols));
+}
+
+template <typename T>
+i32 Buf2D<T>::len() const {
+    MUST(c_arr_2d_check(ptr, rows, cols));
+    return rows * cols;
 }
 
 template <typename T>
