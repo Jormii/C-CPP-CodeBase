@@ -115,6 +115,42 @@ i32 Buf2D_get_test(void) {
     return 1;
 }
 
+i32 Buf2D_len_test(void) {
+    i32 arr[] = {
+        1, 2, 3, //
+        4, 5, 6, //
+    };
+
+    Buf2D buf = {arr, 2, 3};
+    ASSERTZ(buf.len() == (2 * 3));
+
+    return 1;
+}
+
+i32 Buf2D_operator_subscript_test(void) {
+    i32 arr[] = {
+        1, 2, 3, //
+        4, 5, 6, //
+    };
+
+    i32 rows = 2;
+    i32 cols = 3;
+    Buf2D<i32> buf = {arr, rows, cols};
+    const Buf2D<i32> buf_const = {arr, rows, cols};
+
+    for (i32 i = 0; i < buf.len(); ++i) {
+        i32 &p = buf[i];
+        const i32 &pc = buf[i];
+        const i32 &pc_const = buf_const[i];
+
+        ASSERTZ(p == arr[i]);
+        ASSERTZ(pc == arr[i]);
+        ASSERTZ(pc_const == arr[i]);
+    }
+
+    return 1;
+}
+
 // cpp.hpp::Arr
 i32 Arr_len_test(void) {
     Arr<3, i32> arr = {0, 1, 2};
