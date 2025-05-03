@@ -61,6 +61,9 @@ struct Buf2D {
 
     T &get(i32 row, i32 col);
     const T &get(i32 row, i32 col) const;
+
+    T &operator[](i32 idx);
+    const T &operator[](i32 idx) const;
 };
 
 template <i32 N, typename T>
@@ -386,6 +389,17 @@ const T &Buf2D<T>::get(i32 row, i32 col) const {
     i32 idx = c_arr_2d_idx(cols, row, col);
     return ptr[idx];
 };
+
+template <typename T>
+T &Buf2D<T>::operator[](i32 idx) {
+    return CONST_CAST(T &, operator[], idx);
+}
+
+template <typename T>
+const T &Buf2D<T>::operator[](i32 idx) const {
+    MUST(c_arr_idx_check(ptr, len(), idx));
+    return ptr[idx];
+}
 
 template <i32 N, typename T>
 i32 Arr<N, T>::len() const {
