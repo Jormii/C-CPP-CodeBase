@@ -336,7 +336,7 @@ i32 Arr_operator_subscript_test(void) {
     return 1;
 }
 
-i32 Arr_operator_add_test(void) {
+i32 Arr_operator_add_i32_test(void) {
     Arr<3, i32> arr = {0, 1, 2};
     const Arr<3, i32> arr_const = {0, 1, 2};
     ASSERTZ(arr.len() == arr_const.len());
@@ -362,6 +362,17 @@ i32 Arr_operator_neg_test(void) {
 
     V2i neg = -u;
     ASSERTZ(neg == expected_neg);
+
+    return 1;
+}
+
+i32 Arr_operator_add_Arr_test(void) {
+    V2i u = {2, -3};
+    V2i v = {-4, 16};
+    V2i expected_add = {-2, 13};
+
+    V2i add = u + v;
+    ASSERTZ(add == expected_add);
 
     return 1;
 }
