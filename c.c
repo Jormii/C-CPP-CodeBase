@@ -37,6 +37,7 @@ void prof_rename(i32 idx, const char *name) {}
 #else
 
 #define __SLOTS_LEN 8
+#define __SLOTS_ELAPSED_LEN 100
 
 typedef struct ProfSlot_st {
     const char *name;
@@ -44,6 +45,9 @@ typedef struct ProfSlot_st {
     clock_t kicked;
     clock_t min, max;
     i32 kick_cnt, stop_cnt;
+    i32 elapsed_idx;
+    i32 elapsed_capped;
+    clock_t elapsed[__SLOTS_ELAPSED_LEN];
 } ProfSlot;
 
 static ProfSlot __slots[__SLOTS_LEN];
@@ -60,10 +64,27 @@ void prof_dump() {
         if (s->kick_cnt != 0 || s->stop_cnt != 0) {
             const char *name = (s->name == NULL) ? "no-name" : s->name;
 
-            printf(                                                         //
-                "PROF %d (%s). %d|%d calls, %lu clocks [%lu, %lu]\n",       //
-                i, name, s->kick_cnt, s->stop_cnt, s->total, s->min, s->max //
+            float mean = 0;
+            if (!s->elapsed_capped) {
+                for (i32 i = 0; i < s->elapsed_idx; ++i) {
+                    mean += s->elapsed[i];
+                }
+                mean /= s->elapsed_idx;
+            } else {
+                for (i32 i = 0; i < __SLOTS_ELAPSED_LEN; ++i) {
+                    mean += s->elapsed[i];
+                }
+                mean /= __SLOTS_ELAPSED_LEN;
+            }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
+            printf(                                                          //
+                "PROF %d (%s). %d|%d calls, %lu clocks [%lu, %lu] (:%lu)\n", //
+                i, name, s->kick_cnt, s->stop_cnt,                           //
+                s->total, s->min, s->max, (clock_t)mean                      //
             );
+#pragma GCC diagnostic pop
         }
 
         s->total = 0;
@@ -95,6 +116,13 @@ void prof_stop(i32 idx) {
         s->min = MIN(s->min, elapsed);
         s->max = MAX(s->max, elapsed);
     }
+
+    if (s->elapsed_idx == __SLOTS_ELAPSED_LEN) {
+        s->elapsed_idx = 0;
+        s->elapsed_capped = 1;
+    }
+    s->elapsed[s->elapsed_idx] = elapsed;
+    s->elapsed_idx += 1;
 }
 
 void prof_rename(i32 idx, const char *name) {
