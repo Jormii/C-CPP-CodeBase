@@ -731,6 +731,46 @@ i32 Mat_operator_mul_Arr_test(void) {
     return 1;
 }
 
+i32 Mat_operator_add_test(void) {
+    M2i m = {
+        2, 3, //
+        4, 5, //
+    };
+    M2i n = {
+        6, 7, //
+        8, 9, //
+    };
+    M2i expected_add = {
+        8, 10,  //
+        12, 14, //
+    };
+
+    M2i add = m + n;
+    ASSERTZ(add == expected_add);
+
+    return 1;
+}
+
+i32 Mat_operator_add_assign_test(void) {
+    M2i m = {
+        2, 3, //
+        4, 5, //
+    };
+    M2i n = {
+        6, 7, //
+        8, 9, //
+    };
+    M2i expected_add = {
+        8, 10,  //
+        12, 14, //
+    };
+
+    m += n;
+    ASSERTZ(m == expected_add);
+
+    return 1;
+}
+
 i32 Mat_operator_mul_Mat_test(void) {
     M2i m = {
         2, 3, //
