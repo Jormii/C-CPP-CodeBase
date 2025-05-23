@@ -34,6 +34,7 @@ struct Buf {
     T *ptr;
     i32 len;
 
+    Buf();
     Buf(T *ptr, i32 len);
 
     T *end();
@@ -319,6 +320,9 @@ void __mul_mm(const T *m, const T *a, T *out, i32 n, i32 cnt);
 #pragma endregion
 
 #pragma region template implementation
+
+template <typename T>
+Buf<T>::Buf() : ptr{NULL}, len{0} {}
 
 template <typename T>
 Buf<T>::Buf(T *ptr, i32 len) : ptr{ptr}, len{len} {
