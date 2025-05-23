@@ -185,6 +185,8 @@ struct Mat {
     static Mat zeros();
 
     Arr<N, T> operator*(const Arr<N, T> &rhs) const;
+    Mat operator+(const Mat &rhs) const;
+    Mat &operator+=(const Mat &rhs);
     Mat operator*(const Mat &rhs) const;
     bool operator==(const Mat &rhs) const;
 };
@@ -762,6 +764,20 @@ Arr<N, T> Mat<N, T>::operator*(const Arr<N, T> &rhs) const {
     mul_mv(ptr, rhs.ptr, mul_mv_.ptr, N);
 
     return mul_mv_;
+}
+
+template <i32 N, typename T>
+Mat<N, T> Mat<N, T>::operator+(const Mat &rhs) const {
+    Mat add;
+    add_v(ptr, rhs.ptr, add.ptr, len());
+
+    return add;
+}
+
+template <i32 N, typename T>
+Mat<N, T> &Mat<N, T>::operator+=(const Mat &rhs) {
+    add_v(ptr, rhs.ptr, ptr, len());
+    return *this;
 }
 
 template <i32 N, typename T>
